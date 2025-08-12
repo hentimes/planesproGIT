@@ -1,0 +1,174 @@
+/* ===================================
+   3.0 -> Estructura Principal (Layout)
+   =================================== */
+/* CORRECCIÓN: Se usa Flexbox para asegurar que el footer llegue al final */
+.body-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+main {
+   padding-top: 0;
+   flex-grow: 1; /* Esto empuja el footer hacia abajo */
+}
+
+.container {
+   width: 100%;
+   max-width: var(--container-width);
+   margin-left: auto;
+   margin-right: auto;
+   padding-left: var(--spacing-lg);
+   padding-right: var(--spacing-lg);
+}
+
+.section__title {
+   text-align: center;
+   font-size: 2rem;
+   margin-bottom: var(--spacing-xl);
+}
+
+/* ===================================
+   3.1 -> Layout de Secciones
+   =================================== */
+.screen {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: var(--spacing-xxl);
+  padding-bottom: var(--spacing-xxl);
+}
+.screen--light-bg {
+    background-color: var(--color-background);
+}
+.screen .page-section,
+.screen .page-section-full {
+    padding: 0;
+    width: 100%;
+    background-color: transparent;
+}
+
+/* ===================================
+   3.2 -> Estilos Específicos por Sección
+   =================================== */
+#inicio.screen {
+    padding: 0;
+    background-color: var(--color-white);
+}
+.hero {
+     display: flex;
+     align-items: center;
+}
+.hero__container {
+     display: flex;
+     flex-direction: column;
+     justify-content: space-around;
+     align-items: center;
+     text-align: center;
+     width: 100%;
+     padding-top: calc(var(--header-height) + 20px);
+     padding-bottom: 20px;
+}
+.hero__title {
+     margin-top: 0;
+     margin-bottom: var(--spacing-md);
+     font-size: 2.2rem;
+}
+.hero__logos-group {
+    width: 100%;
+    margin-top: var(--spacing-md);
+}
+.section-logos__title {
+    font-size: 1.3rem;
+    font-weight: 400;
+    color: var(--color-text-light);
+    margin-bottom: var(--spacing-md);
+}
+.logo-fader {
+    min-height: 40px;
+}
+#proceso .section__title {
+    margin-bottom: var(--spacing-lg);
+}
+#proceso.screen {
+    padding-top: var(--spacing-lg);
+}
+#proceso .page-section {
+    display: flow-root;
+    padding-top: var(--spacing-sm);
+}
+#proceso .section__title {
+    margin-top: 0;
+}
+.proceso__grid {
+   display: grid;
+   grid-template-columns: repeat(4, 1fr);
+   gap: var(--spacing-lg);
+   width: 100%;
+}
+.proceso__illustration-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: var(--spacing-xl);
+}
+.proceso__illustration {
+    max-width: 280px;
+    height: auto;
+}
+#planes.screen {
+    background-color: var(--color-white);
+}
+#planes .section__title--compact {
+    margin-bottom: var(--spacing-lg);
+}
+.attention-card {
+    background-color: #fffbe6;
+    border: 1px solid #ffe58f;
+    border-radius: var(--radius-md);
+    padding: var(--spacing-md) var(--spacing-lg);
+    margin: var(--spacing-xl) auto 0 auto;
+    max-width: 600px;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    color: var(--color-text);
+}
+.attention-card i {
+    color: #faad14;
+    font-size: 1.5rem;
+}
+
+/* --- Sección final: CTA y Footer --- */
+.screen--footer {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+.section-cta-final {
+   background-color: var(--color-primary);
+   color: var(--color-white);
+   width: 100%;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   padding: var(--spacing-xxl) 0;
+}
+.cta-final__container {
+     text-align: center;
+}
+.cta-final__container h2 {
+   color: var(--color-white);
+}
+.cta-benefits {
+   margin-top: var(--spacing-xl);
+   display: flex;
+   justify-content: center;
+   flex-wrap: wrap;
+   gap: var(--spacing-xl);
+}
+.cta-benefit-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}

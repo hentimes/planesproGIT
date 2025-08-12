@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Noticias - PlanesPro.cl</title>
+    <link rel="icon" href="assets/logos_pp/favicon.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="body-wrapper page-noticias">
+
+    <header class="header">
+        <div class="container header__container">
+            <a href="index.html" class="header__brand">
+                <img src="assets/logos_pp/logo-planespro.cla.png" alt="PlanesPro.cl Logo" class="header__logo-img" />
+                <span class="header__brand-name">PlanesPro.cl</span>
+            </a>
+            <nav class="header__nav">
+                <a href="index.html" class="header__nav-link">Inicio</a>
+                <a href="noticias.html" class="header__nav-link header__nav-link--active">Noticias</a>
+                <a href="asesores.html" class="header__nav-link">Nuestros Asesores</a>
+            </nav>
+            <div class="header__actions">
+                <button class="button button--primary header__cta" data-modal-trigger="formModal" id="cta_superior">Analizar Mi Plan</button>
+                <button class="header__nav-toggle" id="nav-toggle" aria-label="Abrir menú">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="nav-mobile" id="nav-mobile">
+        <a href="index.html" class="nav-mobile__link">Inicio</a>
+        <a href="noticias.html" class="nav-mobile__link">Noticias</a>
+        <a href="asesores.html" class="nav-mobile__link">Nuestros Asesores</a>
+        <button class="button button--primary nav-mobile__cta" data-modal-trigger="formModal" id="cta_mobile_menu_noticias">Analizar Mi Plan</button>
+    </div>
+
+    <main>
+        <section class="container page-section">
+            <div class="placeholder-content">
+                <img src="assets/ilustraciones/news.webp" alt="Ilustración de noticias" class="placeholder-illustration">
+                <h1 class="section__title">Noticias del Sector Salud</h1>
+                <p>¡Próximamente! Estamos preparando la mejor sección de noticias y análisis sobre el sistema de salud en Chile para mantenerte siempre informado. Vuelve pronto.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer__bottom">
+            <p>© 2025 PlanesPro.cl. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+    <div class="modal" id="formModal">
+        <div class="modal__overlay" data-modal-trigger="formModal"></div>
+        <div class="modal__content-wrapper">
+            <div class="modal__content" id="form-container">
+                <button class="modal__close" data-modal-trigger="formModal">&times;</button>
+                <div class="modal__body">
+                    <h3>Formulario de Análisis</h3>
+                    <p>El formulario estará disponible aquí próximamente.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <a href="https://wa.me/56912345678" class="floating-whatsapp" aria-label="Contactar por WhatsApp" target="_blank"><i class="fab fa-whatsapp"></i></a>
+    <script src="js/main.js" type="module"></script>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nuestros Asesores - PlanesPro.cl</title>
+    <meta name="description" content="Conoce a nuestros asesores certificados, listos para ayudarte a optimizar tu plan de salud." />
+    <link rel="icon" href="assets/logos_pp/favicon.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="body-wrapper">
+
+    <header class="header">
+        <div class="container header__container">
+            <a href="index.html" class="header__brand">
+                <img src="assets/logos_pp/logo-planespro.cla.png" alt="PlanesPro.cl Logo" class="header__logo-img" />
+                <span class="header__brand-name">PlanesPro.cl</span>
+            </a>
+            <nav class="header__nav">
+                <a href="index.html" class="header__nav-link">Inicio</a>
+                <a href="noticias.html" class="header__nav-link">Noticias</a>
+                <a href="asesores.html" class="header__nav-link header__nav-link--active">Nuestros Asesores</a>
+            </nav>
+            <div class="header__actions">
+                <button class="button button--primary header__cta" data-modal-trigger="formModal" id="cta_superior">Analizar Mi Plan</button>
+                <button class="header__nav-toggle" id="nav-toggle" aria-label="Abrir menú">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="nav-mobile" id="nav-mobile">
+        <a href="index.html" class="nav-mobile__link">Inicio</a>
+        <a href="noticias.html" class="nav-mobile__link">Noticias</a>
+        <a href="asesores.html" class="nav-mobile__link">Nuestros Asesores</a>
+        <button class="button button--primary nav-mobile__cta" data-modal-trigger="formModal" id="cta_mobile_menu_asesores">Analizar Mi Plan</button>
+    </div>
+
+    <main>
+        <section class="container page-section">
+            <h1 class="section__title">Nuestros Especialistas Certificados</h1>
+            <p class="section__subtitle">Profesionales con experiencia comprobada ayudando a familias chilenas a optimizar sus planes de salud.</p>
+        </section>
+
+        <section class="container" id="asesores-container">
+            </section>
+
+        <section class="container page-section">
+            <h2 class="section__title">Nuestros Servicios</h2>
+             <div class="servicios__grid">
+                <div class="servicio-item">
+                    <i class="fas fa-user-check"></i>
+                    <h3>Asesorías Personalizadas 1 a 1</h3>
+                </div>
+                <div class="servicio-item">
+                    <i class="fas fa-building"></i>
+                    <h3>Charlas a Empresas</h3>
+                </div>
+                <div class="servicio-item">
+                    <i class="fas fa-video"></i>
+                    <h3>Reuniones Online</h3>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <footer class="footer">
+        <div class="footer__bottom">
+            <p>© 2025 PlanesPro.cl. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+    <div class="modal" id="formModal">
+        <div class="modal__overlay" data-modal-trigger="formModal"></div>
+        <div class="modal__content-wrapper">
+            <div class="modal__content" id="form-container">
+                </div>
+        </div>
+    </div>
+    <a href="https://wa.me/56912345678" class="floating-whatsapp" aria-label="Contactar por WhatsApp" target="_blank"><i class="fab fa-whatsapp"></i></a>
+    <script src="js/main.js" type="module"></script>
+</body>
+</html>

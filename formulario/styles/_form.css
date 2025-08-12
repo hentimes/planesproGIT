@@ -1,0 +1,219 @@
+/*
+==========================================================
+FORMULARIO - ELEMENTOS DE FORMULARIO (REFACTORIZADO)
+==========================================================
+*/
+
+/* --- 1. ESTRUCTURA Y PASOS DEL FORMULARIO --- */
+
+.lead-form-modal {
+    position: relative;
+}
+
+.form-step {
+    position: absolute;
+    width: 100%;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.4s ease-out, visibility 0.4s;
+}
+
+.form-step.active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    position: relative;
+}
+
+.form-step-intro {
+    text-align: center;
+    color: var(--text-color-muted);
+    margin-bottom: 25px;
+    padding-top: 15px;
+}
+
+.form-row {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    align-items: flex-start;
+}
+
+.form-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 22px;
+    position: relative;
+}
+
+.form-group-center {
+    align-items: center;
+}
+
+
+/* --- 2. ESTILOS GENERALES DE CAMPOS (INPUT, SELECT) --- */
+
+.form-group label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-color-muted);
+    margin-bottom: 8px;
+    white-space: nowrap;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 12px 15px;
+    background-color: var(--input-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    color: var(--text-color-dark);
+    font-size: 1rem;
+    font-family: var(--font-family);
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input:not([type="radio"]):not([type="checkbox"]):focus,
+select:focus {
+    outline: none;
+    border-color: var(--border-focus-color);
+    box-shadow: var(--box-shadow-focus);
+}
+
+/* Campos de solo lectura: se usa mayor especificidad para evitar !important */
+.form-group input[readonly] {
+    background-color: #e9ecef;
+    color: var(--text-color-muted);
+}
+
+/* Estilos para placeholder (unificados) */
+input::placeholder {
+    color: var(--text-color-muted);
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+input::-webkit-input-placeholder { color: var(--text-color-muted); font-size: 0.9rem; opacity: 0.8; }
+input::-moz-placeholder          { color: var(--text-color-muted); font-size: 0.9rem; opacity: 0.8; }
+input:-ms-input-placeholder      { color: var(--text-color-muted); font-size: 0.9rem; opacity: 0.8; }
+input:-moz-placeholder           { color: var(--text-color-muted); font-size: 0.9rem; opacity: 0.8; }
+
+/* Estilos para el autocompletado de Chrome/Safari.
+   !important es necesario aquí para sobreescribir los estilos agresivos del navegador. */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+    -webkit-text-fill-color: var(--text-color-dark) !important;
+    -webkit-box-shadow: 0 0 0px 1000px var(--input-bg) inset !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 8px !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+
+/* --- 3. ESTILOS PARA TIPOS ESPECÍFICOS DE CAMPOS --- */
+
+/* Selects */
+select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%236c757d' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 1em;
+}
+
+/* Teléfono */
+.phone-input-wrapper { display: flex; align-items: center; }
+.phone-prefix {
+    padding: 12px;
+    background-color: #e9ecef;
+    border: 1px solid var(--border-color);
+    border-right: none;
+    border-radius: 8px 0 0 8px;
+    color: var(--text-color-muted);
+}
+.phone-input-wrapper input { border-radius: 0 8px 8px 0; }
+.phone-input-wrapper input:focus { z-index: 2; position: relative; }
+
+/* Radios */
+.radio-group { display: flex; gap: 12px; align-items: center; padding: 13.5px 10px; border: 1px solid transparent; border-radius: 8px; }
+.radio-group label { display: flex; align-items: center; gap: 8px; color: var(--text-color-dark); cursor: pointer; }
+input[type="radio"] { appearance: none; width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--border-color); background-color: var(--modal-bg); position: relative; cursor: pointer; margin: 0; flex-shrink: 0; transition: border 0.2s; }
+input[type="radio"]:checked { border-color: var(--color-primary); }
+input[type="radio"]:checked::before { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 8px; height: 8px; border-radius: 50%; background-color: var(--color-primary); }
+input[type="radio"]:focus { outline: none; box-shadow: var(--box-shadow-focus); }
+
+/* Sliders (range) */
+.slider-group { display: flex; align-items: center; gap: 15px; width: 100%; }
+input[type="range"] { -webkit-appearance: none; appearance: none; flex-grow: 1; height: 8px; background: #e9ecef; border-radius: 5px; outline: none; padding: 0; margin: 0; }
+input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 20px; height: 20px; background: var(--color-primary); cursor: pointer; border-radius: 50%; border: 2px solid var(--modal-bg); }
+input[type="range"]::-moz-range-thumb { width: 18px; height: 18px; background: var(--color-primary); cursor: pointer; border-radius: 50%; border: 2px solid var(--modal-bg); }
+.slider-output { background-color: #e9ecef; color: var(--text-color-dark); padding: 8px 12px; border-radius: 8px; font-size: 0.9rem; font-weight: 500; min-width: 80px; text-align: center; white-space: nowrap; }
+
+/* Carga de archivos */
+input[type="file"] { display: none; }
+.file-upload-label { border: 2px dashed var(--border-color); border-radius: 8px; padding: 10px; width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer; transition: border-color 0.2s, color 0.2s; }
+.file-upload-label:hover { border-color: var(--color-primary); color: var(--color-primary); }
+.file-preview-wrapper { display: flex; align-items: center; gap: 10px; background-color: #e9ecef; padding: 10px 15px; border-radius: 8px; font-size: 0.9rem; }
+.file-preview-wrapper .fa-file-pdf { color: #e44d26; font-size: 1.5rem; }
+.file-preview-wrapper span { flex-grow: 1; }
+.file-preview-wrapper button { background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--text-color-muted); }
+.file-preview-wrapper button:hover { color: var(--text-color-dark); }
+
+
+/* --- 4. ESTADOS DE VALIDACIÓN --- */
+
+.form-group.input-error input:not([type="radio"]),
+.form-group.input-error select,
+.form-group.input-error .mobile-select-trigger {
+    border-color: var(--color-danger);
+}
+.form-group.input-error .radio-group { border: 1px solid var(--color-danger); }
+.error-message { color: var(--color-danger); font-size: 0.8rem; overflow: hidden; max-height: 0; opacity: 0; transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out, margin-top 0.3s ease-in-out; }
+.error-message.visible { margin-top: 5px; max-height: 2rem; opacity: 1; }
+
+
+/* --- 5. LÓGICA DE VISIBILIDAD (CAMPOS CONDICIONALES Y SELECTS MÓVILES) --- */
+
+.conditional-isapre-fields,
+#afp-details {
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.5s ease-in-out, opacity 0.4s ease-in-out;
+    pointer-events: none;
+}
+.conditional-isapre-fields.is-visible,
+#afp-details.is-visible {
+    max-height: 500px;
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Comportamiento por defecto (Desktop) */
+.mobile-select-trigger { display: none; }
+.mobile-select-wrapper select { display: block; }
+
+/* Comportamiento en móvil */
+@media (max-width: 1024px) {
+    .mobile-select-wrapper select { display: none; }
+    .mobile-select-trigger {
+        display: block;
+        text-align: left;
+        background-color: var(--input-bg);
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%236c757d' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 15px center;
+        background-size: 1em;
+        cursor: pointer;
+    }
+    .mobile-select-trigger[data-target-select="isapre_especifica"],
+    .mobile-select-trigger[data-target-select="afp_actual"] {
+        background-image: none;
+        padding-right: 15px;
+    }
+}
