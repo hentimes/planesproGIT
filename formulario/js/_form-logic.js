@@ -1,26 +1,41 @@
+/*
+==================================================================
+ARCHIVO: planespro/formulario/js/_form-logic.js
+==================================================================
+*/
+
 import { DOM } from './_dom-elements.js';
-// MODIFICADO: Se importan las nuevas funciones para el modal de selección
 import { 
     openModal, 
     closeModal, 
     updateFormView, 
     showFilePreview, 
     getFormStepNum, 
-    setFormStepNum,
-    openSelectionModal,
-    closeSelectionModal,
-    updateMobileSelectTrigger,
-    getCurrentSelectTarget 
+    setFormStepNum
 } from './_ui-helpers.js';
 import { isCurrentStepValid, isFullFormValid, validateField } from './_form-validation.js';
 import { comunasRegiones, LOCAL_STORAGE_KEY } from './_config.js';
 
+
 // --- ¡MUY IMPORTANTE! Pega aquí la URL de tu Google Apps Script ---
-const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwEPkOlUPE9UX9tMFO67WaLgUteZxVMykPyex2BHUcXTl9p6rObAd2DlJsGmFG0_-RoNg/exec';
+const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxvFi7_F5r0Q1ziw1qn_cSV7sCs4KM5Mp5Qx6KvkmzOZLaFPpnEqEz5v2BDLLRctgCPtA/exec';
 // --------------------------------------------------------------------
 
-// --- Función de Lógica Movida a su Lugar Correcto ---
+// --- Variables de estado ---
+let ctaFuente = ''; 
+let edadCargasData = ''; 
+let factorData = ''; 
+
+// --- Constantes ---
+const FACTOR_POR_EDAD = {
+  "18-25": "0.9", "26-35": "1.0", "36-45": "1.3",
+  "46-55": "1.4", "56-64": "2.0", "65+": "2.4"
+};
+
+
+// --- Funciones de Lógica de UI ---
 export function updateActionButtonState() {
+    if (!DOM.formSteps || DOM.formSteps.length === 0) return;
     const currentStep = DOM.formSteps[getFormStepNum()];
     if (!currentStep) return;
     const actionBtn = currentStep.querySelector('.next-btn, .submit-btn');
@@ -38,6 +53,7 @@ const debounce = (func, delay = 300) => {
 };
 
 export const saveProgress = debounce(() => {
+    if (!DOM.leadForm) return;
     const formData = new FormData(DOM.leadForm);
     const data = Object.fromEntries(formData.entries());
     ['anualidad_isapre', 'evaluar_afp'].forEach(name => {
@@ -49,6 +65,7 @@ export const saveProgress = debounce(() => {
 
 export function loadProgress() {
     try {
+        if (!DOM.leadForm) return;
         const savedData = localStorage.getItem(LOCAL_STORAGE_KEY);
         if (!savedData) return;
         const data = JSON.parse(savedData);
@@ -66,13 +83,9 @@ export function loadProgress() {
                 }
             }
         }
-        document.getElementById('sistema_actual').dispatchEvent(new Event('change'));
-        document.getElementById('comuna').dispatchEvent(new Event('change'));
+        document.getElementById('sistema_actual')?.dispatchEvent(new Event('change'));
+        document.getElementById('comuna')?.dispatchEvent(new Event('change'));
         document.querySelector('input[name="evaluar_afp"]:checked')?.dispatchEvent(new Event('change'));
-
-        // AÑADIDO: Se actualizan los inputs visuales después de cargar los datos
-        document.querySelectorAll('select').forEach(updateMobileSelectTrigger);
-
     } catch (error) {
         console.error("Error al cargar el progreso:", error);
         localStorage.removeItem(LOCAL_STORAGE_KEY);
@@ -102,39 +115,53 @@ function getFormattedDateTime() {
     return `${year}-${month}-${day}_${hours}${minutes}${seconds}`;
 }
 
-// MODIFICADO: Se añaden los listeners para el nuevo modal de selección
+
+// --- Lógica de Inicialización de Modales y Navegación ---
 export function initModals() {
     document.body.addEventListener('click', e => {
-        const target = e.target;
-        const targetId = target.id;
-
-        if (targetId === 'continue-btn') {
-            if (!document.getElementById('consent-checkbox').checked) return;
-            document.getElementById('welcome-step').classList.add('hidden');
-            document.getElementById('main-form-container').classList.remove('hidden');
-            setFormStepNum(0);
-            updateFormView();
-        } else if (target.closest('#main-close-btn')) {
-            openModal('exitConfirmModal');
-        } else if (targetId === 'exit-confirm-continue' || targetId === 'isapre-warning-accept') {
-            closeModal(target.closest('.modal').id);
-        } else if (targetId === 'exit-confirm-exit' || targetId === 'finalizar-btn') {
-            closeModal('formModal');
-            closeModal('exitConfirmModal');
-        } 
-        // --- INICIO: LÓGICA PARA EL NUEVO MODAL DE SELECCIÓN ---
-        else if (target.matches('.selection-modal__item')) {
-            const currentSelect = getCurrentSelectTarget();
-            if (currentSelect) {
-                currentSelect.value = target.dataset.value;
-                updateMobileSelectTrigger(currentSelect); // Actualiza el input visual
-                currentSelect.dispatchEvent(new Event('change', { bubbles: true })); // Dispara la validación y otros eventos
-            }
-            closeSelectionModal();
-        } else if (target.id === 'closeSelectionModal') {
-            closeSelectionModal();
+        const trigger = e.target.closest('[data-modal-trigger]');
+        if (trigger && trigger.id) {
+            ctaFuente = trigger.id;
         }
-        // --- FIN: LÓGICA PARA EL NUEVO MODAL ---
+    });
+
+    document.body.addEventListener('click', e => {
+        const button = e.target.closest('button');
+        if (button) {
+            const buttonId = button.id;
+            switch (buttonId) {
+                case 'continue-btn':
+                    if (document.getElementById('consent-checkbox')?.checked) {
+                        closeModal('welcomeModal');
+                        openModal('formModal');
+                        setFormStepNum(0);
+                        updateFormView();
+                        history.pushState({ inForm: true }, 'Formulario');
+                    }
+                    break;
+                case 'main-close-btn':
+                    openModal('exitConfirmModal');
+                    break;
+                case 'exit-confirm-continue':
+                case 'isapre-warning-accept':
+                    closeModal(button.closest('.modal').id);
+                    break;
+                case 'exit-confirm-exit':
+                    closeModal('exitConfirmModal');
+                    closeModal('formModal');
+                    if (history.state && history.state.inForm) history.back();
+                    break;
+                case 'finalizar-btn':
+                    closeModal('thankYouModal');
+                    break;
+            }
+        }
+
+        if (e.target.id === 'welcomeModal') {
+            if (e.target.classList.contains('is-visible')) {
+                closeModal('welcomeModal');
+            }
+        }
     });
 
     const consentCheckbox = document.getElementById('consent-checkbox');
@@ -143,19 +170,39 @@ export function initModals() {
         document.getElementById('continue-btn').disabled = !consentCheckbox.checked; 
       });
     }
+
+    window.addEventListener('popstate', (event) => {
+      if (document.getElementById('formModal')?.classList.contains('is-visible') && event.state && event.state.inForm) {
+        openModal('exitConfirmModal');
+        history.pushState({ inForm: true }, 'Formulario');
+      }
+    });
 }
 
 export function initStepNavigation() {
+    if (!DOM.leadForm) return;
     DOM.leadForm.addEventListener('click', (e) => {
         if (e.target.matches('.next-btn')) {
-            if (isCurrentStepValid()) {
-                let currentStep = getFormStepNum();
-                if (currentStep < DOM.formSteps.length - 1) {
-                    setFormStepNum(currentStep + 1);
+            const currentStep = DOM.formSteps[getFormStepNum()];
+            let allValid = true;
+            currentStep.querySelectorAll('input[required], select[required]').forEach(field => {
+                const formGroup = field.closest('.form-group');
+                if (formGroup) {
+                    formGroup.classList.add('is-interacted');
+                    if (!validateField(field)) {
+                        allValid = false;
+                    }
+                }
+            });
+
+            if (allValid) {
+                let currentStepNum = getFormStepNum();
+                if (currentStepNum < DOM.formSteps.length - 1) {
+                    setFormStepNum(currentStepNum + 1);
                     updateFormView('next');
                 }
             } else {
-                const firstError = DOM.formSteps[getFormStepNum()].querySelector('.input-error, .radio-group.input-error');
+                const firstError = currentStep.querySelector('.input-error');
                 firstError?.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
         }
@@ -169,69 +216,50 @@ export function initStepNavigation() {
     });
 }
 
-// MODIFICADO: Se actualiza el input visual cuando cambia un select
 export function handleFieldInteraction(e) {
     const field = e.target;
-    if (field.type === 'file') {
-        handleFileUpload(field);
-    } else {
+    const formGroup = field.closest('.form-group');
+    if (e.type === 'focusout') {
+        formGroup?.classList.add('is-interacted');
         validateField(field);
-        // AÑADIDO: Si el campo que cambió es un SELECT, actualiza su trigger visual
-        if (field.tagName === 'SELECT') {
-            updateMobileSelectTrigger(field);
+    } else if (e.type === 'input' || e.type === 'change') {
+        if (formGroup?.classList.contains('is-interacted')) {
+            validateField(field);
         }
     }
     updateActionButtonState();
     saveProgress();
 }
 
-// MODIFICADO: Se añade el listener para abrir el modal de selección
 export function initFormEventListeners() {
+    if (!DOM.leadForm) return;
     DOM.leadForm.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
             e.preventDefault();
             const currentStep = DOM.formSteps[getFormStepNum()];
             const actionBtn = currentStep.querySelector('.next-btn, .submit-btn');
-            if (actionBtn && !actionBtn.disabled) {
-                actionBtn.click();
-            }
+            if (actionBtn && !actionBtn.disabled) actionBtn.click();
         }
     });
-    
-    // AÑADIDO: Listener específico para abrir el modal de selección al tocar el input falso
-    DOM.leadForm.addEventListener('click', (e) => {
-        if (e.target.matches('.mobile-select-trigger')) {
-            const selectId = e.target.dataset.targetSelect;
-            const selectElement = document.getElementById(selectId);
-            if (selectElement) {
-                openSelectionModal(selectElement);
-            }
-        }
-    });
-
+    DOM.leadForm.addEventListener('focusout', handleFieldInteraction);
     DOM.leadForm.addEventListener('input', handleFieldInteraction);
     DOM.leadForm.addEventListener('change', handleFieldInteraction);
-
-    const modalBody = document.querySelector('.modal-body');
-    modalBody.addEventListener('scroll', () => {
-        document.querySelector('.modal-header').classList.toggle('scrolled', modalBody.scrollTop > 0);
-    });
-
+    const modalBody = document.querySelector('#formModal .modal-body');
+    if (modalBody) {
+        modalBody.addEventListener('scroll', () => {
+            document.querySelector('#formModal .modal-header')?.classList.toggle('scrolled', modalBody.scrollTop > 0);
+        });
+    }
     window.addEventListener('beforeunload', () => {
         const progress = localStorage.getItem(LOCAL_STORAGE_KEY);
-        if (progress && Object.keys(JSON.parse(progress)).length > 2) { 
+        if (progress && Object.keys(JSON.parse(progress)).length > 2) {
             const data = JSON.parse(progress);
             data.status = 'Abandonado';
-            
             const urlParams = new URLSearchParams(window.location.search);
-            data.fuente = urlParams.get('fuente') || '';
+            data.fuente = ctaFuente || urlParams.get('fuente') || '';
             data.campana = urlParams.get('campana') || '';
-
             const formData = new FormData();
-            for(const key in data) {
-                formData.append(key, data[key]);
-            }
-
+            for (const key in data) formData.append(key, data[key]);
             if (WEB_APP_URL && !WEB_APP_URL.includes('PEGA_AQUÍ')) {
                 navigator.sendBeacon(WEB_APP_URL, formData);
             }
@@ -241,48 +269,190 @@ export function initFormEventListeners() {
 }
 
 export function initDynamicFields() {
+    if (!DOM.leadForm) return;
+
+    // Listener para formateo de RUT y actualización de sliders
     DOM.leadForm.addEventListener('input', (e) => {
-        if (e.target.id === 'rut') e.target.value = formatRut(e.target.value);
-        if (e.target.id === 'estatura') DOM.estaturaOutput.textContent = `${parseFloat(e.target.value).toFixed(2)} m`;
-        if (e.target.id === 'peso') DOM.pesoOutput.textContent = `${e.target.value} Kg`;
+        const target = e.target;
+        if (target.id === 'rut') target.value = formatRut(target.value);
+        if (target.id === 'estatura' && DOM.estaturaOutput) DOM.estaturaOutput.textContent = `${parseFloat(target.value).toFixed(2)} m`;
+        if (target.id === 'peso' && DOM.pesoOutput) DOM.pesoOutput.textContent = `${target.value} Kg`;
     });
+
+    // Listener para lógica condicional y otros cambios
     DOM.leadForm.addEventListener('change', e => {
-        if (e.target.id === 'sistema_actual') {
+        const target = e.target;
+        
+        // =======================================================
+        // ===== INICIO DE LA CORRECCIÓN: Conectar el input de archivo
+        // =======================================================
+        if (target.id === 'pdf_file') {
+            handleFileUpload(target);
+        }
+        // =======================================================
+        // ===== FIN DE LA CORRECCIÓN
+        // =======================================================
+
+        if (target.id === 'sistema_actual') {
             const isapreDetails = document.getElementById('isapre-details');
-            const isIsapre = e.target.value === 'Isapre';
+            if (!isapreDetails) return;
+            const isIsapre = target.value === 'Isapre';
             isapreDetails.classList.toggle('is-visible', isIsapre);
             isapreDetails.querySelectorAll('select, input[type="radio"]').forEach(field => field.required = isIsapre);
         }
-        if (e.target.closest('#anualidad-isapre-group') && e.target.value === 'No') {
+        if (target.closest('#anualidad-isapre-group') && target.value === 'No') {
             const isapreName = document.getElementById('isapre_especifica').value;
             if (isapreName) {
                 const msg = isapreName === 'Otra' ? `Recuerde que debe tener al menos un año en "Tu Isapre actual".` : `Recuerde que debe tener al menos un año en "${isapreName}".`;
-                document.getElementById('isapre-warning-text').textContent = msg;
+                const warningText = document.getElementById('isapre-warning-text');
+                if(warningText) warningText.textContent = msg;
                 openModal('isapreWarningModal');
             }
         }
-        if (e.target.closest('#afp-radio-group')) {
+        if (target.closest('#afp-radio-group')) {
             const afpDetails = document.getElementById('afp-details');
-            const wantsAfpChange = e.target.value === 'Si';
+            if (!afpDetails) return;
+            const wantsAfpChange = target.value === 'Si';
             afpDetails.classList.toggle('is-visible', wantsAfpChange);
             document.getElementById('afp_actual').required = wantsAfpChange;
+            updateActionButtonState();
         }
-        if (e.target.id === 'comuna') {
-            document.getElementById('region').value = comunasRegiones[e.target.value] || '';
+        if (target.id === 'rango_edad') {
+            factorData = FACTOR_POR_EDAD[target.value] || '';
+        }
+        if (target.id === 'num_cargas') {
+            const numCargas = parseInt(target.value.replace('+', ''), 10);
+            if (isNaN(numCargas) || numCargas === 0) {
+                edadCargasData = '';
+            } else {
+                openEdadCargasModal(numCargas);
+            }
         }
     });
-    const comunaSelect = document.getElementById('comuna');
-    Object.keys(comunasRegiones).sort().forEach(comuna => {
-        const option = document.createElement('option');
-        option.value = comuna;
-        option.textContent = comuna;
-        comunaSelect.appendChild(option);
+    initComunaAutocomplete();
+}
+
+function initComunaAutocomplete() {
+    const comunaInput = document.getElementById('comuna');
+    if (!comunaInput) return;
+    const regionInput = document.getElementById('region');
+    let suggestionsContainer = null;
+    const allComunas = Object.keys(comunasRegiones).sort();
+    const filterComunas = (term) => {
+        if (!term) return [];
+        const lowerTerm = term.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        return allComunas.filter(comuna => 
+            comuna.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").includes(lowerTerm)
+        ).slice(0, 8);
+    };
+    const showSuggestions = (suggestions) => {
+        hideSuggestions();
+        if (suggestions.length === 0) return;
+        suggestionsContainer = document.createElement('div');
+        suggestionsContainer.className = 'autocomplete-suggestions';
+        suggestions.forEach(comuna => {
+            const item = document.createElement('div');
+            item.className = 'suggestion-item';
+            item.textContent = comuna;
+            item.addEventListener('click', () => {
+                comunaInput.value = comuna;
+                if (regionInput) regionInput.value = comunasRegiones[comuna] || '';
+                const formGroup = comunaInput.closest('.form-group');
+                formGroup?.classList.add('is-interacted');
+                validateField(comunaInput);
+                hideSuggestions();
+                updateActionButtonState();
+            });
+            suggestionsContainer.appendChild(item);
+        });
+        comunaInput.parentNode.appendChild(suggestionsContainer);
+    };
+    const hideSuggestions = () => {
+        if (suggestionsContainer) {
+            suggestionsContainer.remove();
+            suggestionsContainer = null;
+        }
+    };
+    comunaInput.addEventListener('input', debounce(() => {
+        const suggestions = filterComunas(comunaInput.value);
+        showSuggestions(suggestions);
+    }));
+    comunaInput.addEventListener('blur', () => {
+        setTimeout(() => {
+            hideSuggestions();
+            const formGroup = comunaInput.closest('.form-group');
+            formGroup?.classList.add('is-interacted');
+            validateField(comunaInput);
+            updateActionButtonState();
+        }, 150);
+    });
+}
+
+function openEdadCargasModal(numCargas) {
+    const modalId = 'edadCargasModal';
+    let modal = document.getElementById(modalId);
+    if (modal) modal.remove();
+    modal = document.createElement('div');
+    modal.id = modalId;
+    modal.className = 'modal is-visible warning-modal';
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    let inputsHtml = '';
+    for (let i = 1; i <= numCargas; i++) {
+        inputsHtml += `
+            <div class="form-group">
+                <label for="edad_carga_${i}">Edad Carga ${i}*</label>
+                <input type="number" id="edad_carga_${i}" class="edad-carga-input" min="0" max="120" required placeholder="Ej: 5">
+                <div class="error-message">Completa este campo</div>
+            </div>
+        `;
+    }
+    modal.innerHTML = `
+        <div class="modal-content">
+             <div class="modal-header">
+                <h3><i class="fas fa-child"></i> Ingresa las Edades</h3>
+            </div>
+            <div class="modal-body">
+                <form id="edadCargasForm" novalidate>
+                    <p>Por favor, ingresa la edad de cada una de tus ${numCargas} cargas.</p>
+                    ${inputsHtml}
+                    <div class="modal-actions">
+                        <button type="submit" class="cta-btn-primary">Confirmar Edades</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+    const form = modal.querySelector('#edadCargasForm');
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const inputs = form.querySelectorAll('.edad-carga-input');
+        let allValid = true;
+        const edades = [];
+        inputs.forEach(input => {
+            const formGroup = input.closest('.form-group');
+            const errorDiv = formGroup.querySelector('.error-message');
+            if (input.value.trim() === '') {
+                allValid = false;
+                formGroup.classList.add('input-error');
+                if (errorDiv) errorDiv.classList.add('visible');
+            } else {
+                formGroup.classList.remove('input-error');
+                if (errorDiv) errorDiv.classList.remove('visible');
+                edades.push(input.value);
+            }
+        });
+        if (!allValid) return;
+        edadCargasData = edades.join(', ');
+        modal.remove();
     });
 }
 
 export function handleFileUpload(fileInput) {
     const errorDiv = document.getElementById('error-pdf_file');
     const file = fileInput.files[0];
+    if (!errorDiv) return;
     errorDiv.textContent = '';
     errorDiv.classList.remove('visible');
     if (!file) return;
@@ -301,33 +471,23 @@ export function handleFileUpload(fileInput) {
     showFilePreview(file);
 }
 
-// REEMPLAZA LA FUNCIÓN COMPLETA EN _form-logic.js
 async function sendDataToGoogleScript(formData) {
     if (!WEB_APP_URL || WEB_APP_URL.includes('PEGA_AQUÍ')) {
         console.error("URL de Google Apps Script no configurada.");
         return { success: false };
     }
     try {
-        // AÑADIMOS 'redirect: manual' PARA DETENER LA REDIRECCIÓN AUTOMÁTICA
         const response = await fetch(WEB_APP_URL, {
             method: 'POST',
             body: formData,
-            redirect: 'manual' // <--- ESTA ES LA LÍNEA CLAVE
+            redirect: 'manual'
         });
-
-        // AÑADIMOS ESTE LOG PARA VER LA RESPUESTA REAL
-        console.log("Respuesta directa del servidor (antes de la redirección):", response);
-        
-        // Si el tipo es 'opaqueredirect', confirma que Google está forzando la redirección.
-        if (response.type === 'opaqueredirect') {
-            console.log("¡ÉXITO DE DIAGNÓSTICO! Se ha confirmado la redirección. El problema está en el despliegue del script.");
-            // Asumimos que si no hay un error directo, el script se envió.
-            // Google procesará el POST original aunque el navegador vea una redirección.
+        if (response.type === 'opaqueredirect' || response.ok) {
             return { success: true };
         }
-
-        return { success: true };
-        
+        const errorData = await response.json().catch(() => null);
+        console.error("Error del servidor al enviar datos:", errorData || response.statusText);
+        return { success: false };
     } catch (error) {
         console.error("Error de red al enviar datos:", error);
         return { success: false };
@@ -335,57 +495,59 @@ async function sendDataToGoogleScript(formData) {
 }
 
 export function initFormSubmission() {
+    if (!DOM.leadForm) return;
     DOM.leadForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        
-        const submissionErrorDiv = document.getElementById('submission-error');
-        const submitButton = DOM.leadForm.querySelector('.submit-btn');
-        submissionErrorDiv.classList.remove('visible');
-
         if (!isFullFormValid()) return;
 
-        submitButton.disabled = true;
-        submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+        const submitButton = DOM.leadForm.querySelector('.submit-btn');
+        const submissionErrorDiv = document.getElementById('submission-error');
+
+        if (submitButton) {
+            submitButton.disabled = true;
+            submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+        }
 
         const formData = new FormData(DOM.leadForm);
-        
         const urlParams = new URLSearchParams(window.location.search);
-        formData.append('fuente', urlParams.get('fuente') || '');
-        formData.append('campana', urlParams.get('campana') || '');
 
-        if (DOM.pdfFileInput.files.length > 0) {
+        const fuenteDeURL = urlParams.get('fuente');
+        formData.append('fuente_cta', fuenteDeURL || ctaFuente || 'Orgánico');
+        formData.append('campana', urlParams.get('campana') || 'No especificado');
+        formData.append('factor', factorData || 'No calculado');
+        formData.append('edad_cargas', edadCargasData || 'Sin cargas');
+        
+        if (DOM.pdfFileInput && DOM.pdfFileInput.files.length > 0) {
             const file = DOM.pdfFileInput.files[0];
             const extension = file.name.slice(file.name.lastIndexOf("."));
-            const rutValue = DOM.rutInput.value.replace(/\./g, "").replace("-", "");
-
+            const rutValue = DOM.rutInput ? DOM.rutInput.value.replace(/\./g, "").replace("-", "") : '';
             const customName = `${getFormattedDateTime()}_${rutValue}${extension}`;
-
-            // Leer archivo como base64
             const base64 = await new Promise((resolve, reject) => {
                 const reader = new FileReader();
                 reader.onload = () => resolve(reader.result.split(",")[1]);
                 reader.onerror = reject;
                 reader.readAsDataURL(file);
             });
-
             formData.append("base64pdf", base64);
             formData.append("filename", customName);
         }
-
         
         localStorage.removeItem(LOCAL_STORAGE_KEY);
-
         const { success } = await sendDataToGoogleScript(formData);
-
+        
         if (success) {
-            document.getElementById('main-form-container').classList.add('hidden');
-            document.getElementById('thank-you-step').classList.remove('hidden');
+            closeModal('formModal');
+            setTimeout(() => { openModal('thankYouModal'); }, 100);
         } else {
-            submissionErrorDiv.textContent = 'Hubo un error al enviar el formulario. Por favor, inténtelo de nuevo más tarde.';
-            submissionErrorDiv.classList.add('visible');
+            if (submissionErrorDiv) {
+                submissionErrorDiv.textContent = 'Hubo un error al enviar el formulario. Por favor, inténtelo de nuevo más tarde.';
+                submissionErrorDiv.classList.add('visible');
+            }
         }
 
-        submitButton.disabled = false;
-        submitButton.innerHTML = '<i class="fas fa-paper-plane"></i> Obtener Análisis';
+        if (submitButton) {
+            submitButton.disabled = false;
+            submitButton.innerHTML = '<i class="fas fa-paper-plane"></i> Obtener Análisis';
+        }
     });
 }

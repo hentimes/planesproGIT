@@ -1,34 +1,9 @@
-<div id="selectionModal" class="selection-modal" role="dialog" aria-modal="true">
-    <div class="selection-modal__header">
-        <h3 id="selectionModalTitle" class="selection-modal__title">Seleccionar</h3>
-        <button id="closeSelectionModal" class="selection-modal__close" aria-label="Cerrar selección">&times;</button>
-    </div>
-    <ul id="selectionModalList" class="selection-modal__list">
-        </ul>
-</div>
 <div id="formModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
     <div class="modal-content form-modal">
-        
-        <div id="welcome-step">
-            <div class="modal-header">
-                <h3 id="modal-title"><i class="fas fa-hands-helping"></i> Bienvenido.</h3>
-            </div>
-            <div class="modal-body">
-                <p class="welcome-text">Para que tu atención sea lo más personalizada posible, te pediremos algunos datos a continuación. De este modo, el ejecutivo que tome tu caso tendrá el contexto necesario para que la asesoría sea más fluida y sencilla.</p>
-                <div class="consent-group">
-                    <input type="checkbox" id="consent-checkbox">
-                    <label for="consent-checkbox">Estoy de acuerdo</label>
-                </div>
-                <div class="modal-actions">
-                    <button id="continue-btn" class="cta-btn-primary" disabled>Continuar</button>
-                </div>
-            </div>
-        </div>
-
-        <div id="main-form-container" class="hidden">
+        <div id="main-form-container">
             <div class="modal-header">
                 <div class="modal-header-top-row">
-                    <h3><i class="fas fa-user-check"></i> Análisis Gratuito</h3>
+                    <h3 id="modal-title"><i class="fas fa-user-check"></i> Análisis Gratuito</h3>
                     <button class="modal-close" id="main-close-btn" aria-label="Cerrar formulario"><i class="fas fa-times"></i></button>
                 </div>
                 <div class="progress-bar">
@@ -39,7 +14,7 @@
                     <div class="progress-step" data-step="3"><div class="progress-step-icon">3</div><div class="progress-step-label">Contacto</div></div>
                 </div>
             </div>
-            
+
             <div class="modal-body">
                 <form id="leadForm" class="lead-form-modal" novalidate>
                     <div class="form-step active" id="step-1">
@@ -72,9 +47,8 @@
                             </div>
                         </div>
                         <div class="form-row">
-                            <div class="form-group mobile-select-wrapper">
+                            <div class="form-group">
                                 <label for="rango_edad">Tu rango de edad *</label>
-                                <input type="text" class="mobile-select-trigger" placeholder="Seleccionar" readonly data-target-select="rango_edad">
                                 <select id="rango_edad" name="rango_edad" required aria-describedby="error-rango-edad">
                                     <option value="" disabled selected>Seleccionar</option>
                                     <option value="18-25">18 a 25 años</option>
@@ -86,9 +60,8 @@
                                 </select>
                                 <div id="error-rango-edad" class="error-message" aria-live="polite">Este campo es obligatorio.</div>
                             </div>
-                            <div class="form-group mobile-select-wrapper">
+                            <div class="form-group">
                                 <label for="estado_civil">Estado Civil *</label>
-                                <input type="text" class="mobile-select-trigger" placeholder="Seleccionar" readonly data-target-select="estado_civil">
                                 <select id="estado_civil" name="estado_civil" required>
                                     <option value="" disabled selected>Seleccionar</option>
                                     <option value="Soltero">Soltero/a</option>
@@ -100,14 +73,11 @@
                             </div>
                         </div>
                         <div class="form-row">
-                            <div class="form-group mobile-select-wrapper">
+                            <div class="form-group">
                                 <label for="comuna">Comuna *</label>
-                                <input type="text" class="mobile-select-trigger" placeholder="Seleccionar" readonly data-target-select="comuna">
-                                <select id="comuna" name="comuna" required autocomplete="shipping locality" aria-describedby="error-comuna">
-                                    <option value="" disabled selected>Seleccionar</option>
-                                </select>
+                                <input type="text" id="comuna" name="comuna" required autocomplete="off" placeholder="Escribe para buscar tu comuna..." aria-describedby="error-comuna">
                                 <div id="error-comuna" class="error-message" aria-live="polite">Este campo es obligatorio.</div>
-                            </div>
+                                </div>
                             <div class="form-group">
                                 <label for="region">Región</label>
                                 <input type="text" id="region" name="region" readonly placeholder="Automático">
@@ -118,30 +88,29 @@
 
                     <div class="form-step" id="step-2">
                         <p class="form-step-intro">Ahora, cuéntanos sobre tu situación actual.</p>
-                        <div class="form-group mobile-select-wrapper">
+                        <div class="form-group">
                             <label for="sistema_actual">Sistema de Salud Actual *</label>
-                            <input type="text" class="mobile-select-trigger" placeholder="Selecciona tu sistema" readonly data-target-select="sistema_actual">
                             <select id="sistema_actual" name="sistema_actual" required aria-describedby="error-sistema-actual"><option value="" disabled selected>Selecciona tu sistema</option><option value="Fonasa">Fonasa</option><option value="Isapre">Isapre</option></select>
                             <div id="error-sistema-actual" class="error-message" aria-live="polite">Este campo es obligatorio.</div>
                         </div>
+
                         <div id="isapre-details" class="conditional-isapre-fields">
-                            <div class="form-row">
-                                <div class="form-group mobile-select-wrapper">
+                            <div class="form-row form-row--horizontal-mobile">
+                                <div class="form-group">
                                     <label for="isapre_especifica">¿En qué Isapre estás? *</label>
-                                    <input type="text" class="mobile-select-trigger" placeholder="Selecciona Isapre" readonly data-target-select="isapre_especifica">
-                                    <select id="isapre_especifica" name="isapre_especifica" aria-describedby="error-isapre-especifica"><option value="" disabled selected>Selecciona Isapre</option><option value="Banmédica">Banmédica</option><option value="Vida Tres">Vida Tres</option><option value="Colmena">Colmena</option><option value="Cruz Blanca">Cruz Blanca</option><option value="Nueva Masvida">Nueva Masvida</option><option value="Consalud">Consalud</option><option value="Otra">Otra</option></select>
+                                    <select id="isapre_especifica" name="isapre_especifica" aria-describedby="error-isapre-especifica"><option value="" disabled selected>Selecciona</option><option value="Banmédica">Banmédica</option><option value="Vida Tres">Vida Tres</option><option value="Colmena">Colmena</option><option value="Cruz Blanca">Cruz Blanca</option><option value="Nueva Masvida">Nueva Masvida</option><option value="Consalud">Consalud</option><option value="Otra">Otra</option></select>
                                     <div id="error-isapre-especifica" class="error-message" aria-live="polite">Este campo es obligatorio.</div>
                                 </div>
                                 <div class="form-group form-group-center"><label>¿Más de 1 año en ella? *</label><div class="radio-group" id="anualidad-isapre-group" role="radiogroup"><label><input type="radio" name="anualidad_isapre" value="Si" required> Sí</label><label><input type="radio" name="anualidad_isapre" value="No"> No</label></div><div class="error-message" aria-live="polite">Debes seleccionar una opción.</div></div>
                             </div>
                         </div>
-                        <div class="form-group mobile-select-wrapper">
+
+                        <div class="form-group">
                             <label for="num_cargas">Nº de Cargas Familiares *</label>
-                            <input type="text" class="mobile-select-trigger" placeholder="Selecciona cantidad" readonly data-target-select="num_cargas">
                             <select id="num_cargas" name="num_cargas" required aria-describedby="error-num-cargas"><option value="" disabled selected>Selecciona cantidad</option><option value="0">0 cargas</option><option value="1">1 carga</option><option value="2">2 cargas</option><option value="3">3 cargas</option><option value="4">4 cargas</option><option value="5">5 cargas</option><option value="+5">Más de 5 cargas</option></select>
                             <div id="error-num-cargas" class="error-message" aria-live="polite">Este campo es obligatorio.</div>
                         </div>
-                        
+
                         <div class="form-row">
                              <div class="form-group">
                                 <label for="estatura">Estatura (Opcional)</label>
@@ -164,19 +133,18 @@
 
                     <div class="form-step" id="step-3">
                         <p class="form-step-intro">¡Último paso! Ayúdanos a entender qué es lo más importante para ti.</p>
-                        <div class="form-group mobile-select-wrapper">
+                        <div class="form-group">
                             <label for="interes">¿Qué valoras más de un plan de salud? *</label>
-                            <input type="text" class="mobile-select-trigger" placeholder="Selecciona tu prioridad" readonly data-target-select="interes">
                             <select id="interes" name="interes" required aria-describedby="error-interes"><option value="" disabled selected>Selecciona tu prioridad</option><option value="Copagos bajos">Copagos más bajos</option><option value="Mayor cobertura hospitalaria">Mayor cobertura hospitalaria</option><option value="Acceso a clínicas de mejor nivel">Acceso a clínicas de mejor nivel</option><option value="Cobertura en consultas y exámenes">Cobertura en consultas y exámenes</option><option value="Atención especializada o de urgencia">Atención especializada o de urgencia</option></select>
                             <div id="error-interes" class="error-message" aria-live="polite">Este campo es obligatorio.</div>
                         </div>
-                        <div class="form-group mobile-select-wrapper">
+                        <div class="form-group">
                             <label for="rango_costo">Costo APROX. de tu plan actual *</label>
-                            <input type="text" class="mobile-select-trigger" placeholder="Selecciona un rango de precios" readonly data-target-select="rango_costo">
                             <select id="rango_costo" name="rango_costo" required aria-describedby="error-rango-costo"><option value="" disabled selected>Selecciona un rango de precios</option><option value="No lo se">No lo sé</option><option value="<100000">Menos de $100.000</option><option value="100000-150000">$100.000 - $150.000</option><option value="150000-200000">$150.000 - $200.000</option><option value="200000-250000">$200.000 - $250.000</option><option value="250000-300000">$250.000 - $300.000</option><option value="300000-350000">$300.000 - $350.000</option><option value="350000-400000">$350.000 - $400.000</option><option value=">400000">Más de $400.000</option></select>
                             <div id="error-rango-costo" class="error-message" aria-live="polite">Este campo es obligatorio.</div>
                         </div>
-                        <div class="form-row" id="afp-form-row">
+
+                        <div class="form-row form-row--horizontal-mobile" id="afp-form-row">
                             <div class="form-group">
                                 <label>¿Evaluar cambio de AFP? *</label>
                                 <div class="radio-group" id="afp-radio-group" role="radiogroup">
@@ -185,34 +153,22 @@
                                 </div>
                                 <div class="error-message" aria-live="polite">Debes seleccionar una opción.</div>
                             </div>
-                            <div id="afp-details" class="form-group mobile-select-wrapper">
+                            <div id="afp-details" class="form-group">
                                 <label for="afp_actual">AFP Actual *</label>
-                                <input type="text" class="mobile-select-trigger" placeholder="Selecciona tu AFP" readonly data-target-select="afp_actual">
                                 <select id="afp_actual" name="afp_actual" aria-describedby="error-afp-actual">
-                                    <option value="" disabled selected>Selecciona tu AFP</option><option>Capital</option><option>Cuprum</option><option>Habitat</option><option>Modelo</option><option>Planvital</option><option>Provida</option><option>Uno</option>
+                                    <option value="" disabled selected>Selecciona</option>
+                                    <option>Capital</option><option>Cuprum</option><option>Habitat</option><option>Modelo</option><option>Planvital</option><option>Provida</option><option>Uno</option>
                                 </select>
                                 <div id="error-afp-actual" class="error-message" aria-live="polite">Este campo es obligatorio.</div>
                             </div>
                         </div>
+
                         <div class="form-group"><label for="pdf_file">Adjuntar cartola o documento (PDF, Opcional)</label><div class="file-upload-wrapper"><input type="file" id="pdf_file" name="archivo_pdf" accept=".pdf" class="file-upload-input"><label for="pdf_file" class="file-upload-label"><i class="fas fa-cloud-upload-alt"></i><span>Seleccionar archivo</span></label></div><div id="file-preview" class="file-preview-wrapper hidden"></div><div id="error-pdf_file" class="error-message" aria-live="polite"></div></div>
                         <div class="step-navigation"><button type="button" class="cta-btn-secondary prev-btn"><i class="fas fa-arrow-left"></i> Anterior</button><button type="submit" class="cta-btn-primary submit-btn"><i class="fas fa-paper-plane"></i> Obtener Análisis</button></div>
                         <div id="submission-error" class="error-message" aria-live="assertive"></div>
                     </div>
                     <input type="hidden" name="servicio" value="Análisis Isapre Personalizado">
                 </form>
-            </div>
-        </div>
-        
-        <div id="thank-you-step" class="hidden">
-            <div class="modal-header">
-                <h3><i class="fas fa-check-circle"></i> ¡Solicitud Recibida!</h3>
-            </div>
-            <div class="modal-body" style="text-align: center;">
-                <i class="fas fa-paper-plane thank-you-icon"></i>
-                <p class="welcome-text">Hemos recibido la información necesaria para analizar tu caso. Un asesor de salud te contactará en un plazo no mayor a 24 horas.</p>
-                <div class="modal-actions">
-                    <button id="finalizar-btn" class="cta-btn-primary">Finalizar</button>
-                </div>
             </div>
         </div>
     </div>

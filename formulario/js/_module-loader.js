@@ -1,9 +1,11 @@
 // Carga los módulos HTML de forma asíncrona.
 
 export async function loadModules() {
-    // CORRECCIÓN: Las rutas ahora apuntan correctamente desde la raíz del proyecto.
+    // CORRECCIÓN: Se añaden las rutas a los nuevos modales flotantes.
     const modulePaths = {
         'form-modal-placeholder': 'formulario/templates/_form-modal.html',
+        'welcome-modal-placeholder': 'formulario/templates/_welcome-modal.html', // <--- AÑADIDO
+        'thank-you-modal-placeholder': 'formulario/templates/_thank-you-modal.html', // <--- AÑADIDO
         'isapre-warning-modal-placeholder': 'formulario/templates/_warning-isapre.html',
         'exit-confirm-modal-placeholder': 'formulario/templates/_warning-exit.html'
     };
