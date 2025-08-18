@@ -37,27 +37,35 @@ function setupFader(containerId, data, direction) {
     let currentIndex = -1;
     let intervalId = null;
 
-    // Función que maneja el cambio de tarjeta.
-    const changeCard = () => {
-        const currentCard = rowContainer.querySelector('.is-visible');
-        
-        if (currentCard) {
-            currentCard.classList.remove('is-visible');
-            currentCard.classList.add(`is-exiting-${direction}`);
-            currentCard.addEventListener('animationend', () => currentCard.remove(), { once: true });
-        }
+// Función que maneja el cambio de tarjeta.
+const changeCard = () => {
+    const currentCard = rowContainer.querySelector('.is-visible');
 
-        currentIndex = (currentIndex + 1) % data.length;
-        
-        const nextCardHtml = createTestimonialCard(data[currentIndex]);
-        rowContainer.insertAdjacentHTML('beforeend', nextCardHtml);
-        const nextCard = rowContainer.lastElementChild;
+    if (currentCard) {
+        // Se le añaden las clases para la animación de salida
+        currentCard.classList.remove('is-visible');
+        currentCard.classList.add(`is-exiting-${direction}`);
 
-        requestAnimationFrame(() => {
-            nextCard.classList.add(`is-entering-${direction}`);
-            nextCard.classList.add('is-visible');
-        });
-    };
+        // Evento clave: Cuando la animación de salida TERMINA, se elimina la tarjeta del DOM.
+        // La opción { once: true } es crucial para que este evento solo se ejecute una vez.
+        currentCard.addEventListener('animationend', () => {
+            currentCard.remove();
+        }, { once: true });
+    }
+
+    currentIndex = (currentIndex + 1) % data.length;
+
+    const nextCardHtml = createTestimonialCard(data[currentIndex]);
+    rowContainer.insertAdjacentHTML('beforeend', nextCardHtml);
+    const nextCard = rowContainer.lastElementChild;
+
+    // Se usan para forzar al navegador a aplicar las clases en el siguiente "frame" de renderizado,
+    // asegurando que la animación de entrada se ejecute.
+    requestAnimationFrame(() => {
+        nextCard.classList.add(`is-entering-${direction}`);
+        nextCard.classList.add('is-visible');
+    });
+};
 
     // Inicia el intervalo de rotación automática.
     const startInterval = (immediate = false) => {

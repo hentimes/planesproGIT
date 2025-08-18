@@ -9,7 +9,7 @@ export const testimonialsData = [
     author: "Patricio González",
     stars: 5,
     quote: "Gracias a Henry optimicé mi plan y ahora pago mucho menos. Su honestidad es única.",
-    avatar: "/assets/avatares/test.png" // Ruta a la imagen
+    avatar: "assets/avatares/test.png" // Ruta a la imagen
   },
   {
     author: "Carlos Mendoza",

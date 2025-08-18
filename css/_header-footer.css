@@ -236,3 +236,8 @@
     transform: scale(1.1);
     color: var(--color-white);
 }
+
+/* --- Ocultar enlace activo en menú móvil --- */
+.nav-mobile__link--active {
+    display: none;
+}

@@ -146,11 +146,16 @@ export function initModals() {
                 case 'isapre-warning-accept':
                     closeModal(button.closest('.modal').id);
                     break;
-                case 'exit-confirm-exit':
+                
+                // --- INICIO DE LA CORRECCIÓN ---
+                case 'exit-confirm-exit': // Botón "Deseo salir"
+                    sendAbandonedData(); // Se llama a la función de guardado antes de cerrar.
                     closeModal('exitConfirmModal');
                     closeModal('formModal');
                     if (history.state && history.state.inForm) history.back();
                     break;
+                // --- FIN DE LA CORRECCIÓN ---
+
                 case 'finalizar-btn':
                     closeModal('thankYouModal');
                     break;
@@ -231,8 +236,33 @@ export function handleFieldInteraction(e) {
     saveProgress();
 }
 
+const sendAbandonedData = () => {
+    const progress = localStorage.getItem(LOCAL_STORAGE_KEY);
+    
+    if (progress && Object.keys(JSON.parse(progress)).length > 0) {
+        const data = JSON.parse(progress);
+        data.status = 'Abandonado';
+
+        const urlParams = new URLSearchParams(window.location.search);
+        data.fuente_cta = urlParams.get('fuente') || ctaFuente || 'Orgánico';
+        data.campana = urlParams.get('campana') || 'No especificado';
+        
+        const formData = new FormData();
+        for (const key in data) {
+            formData.append(key, data[key]);
+        }
+        
+        if (WEB_APP_URL && !WEB_APP_URL.includes('PEGA_AQUÍ')) {
+            navigator.sendBeacon(WEB_APP_URL, formData);
+        }
+        
+        localStorage.removeItem(LOCAL_STORAGE_KEY);
+    }
+};
+
 export function initFormEventListeners() {
     if (!DOM.leadForm) return;
+
     DOM.leadForm.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
             e.preventDefault();
@@ -250,28 +280,19 @@ export function initFormEventListeners() {
             document.querySelector('#formModal .modal-header')?.classList.toggle('scrolled', modalBody.scrollTop > 0);
         });
     }
-    window.addEventListener('beforeunload', () => {
-        const progress = localStorage.getItem(LOCAL_STORAGE_KEY);
-        if (progress && Object.keys(JSON.parse(progress)).length > 2) {
-            const data = JSON.parse(progress);
-            data.status = 'Abandonado';
-            const urlParams = new URLSearchParams(window.location.search);
-            data.fuente = ctaFuente || urlParams.get('fuente') || '';
-            data.campana = urlParams.get('campana') || '';
-            const formData = new FormData();
-            for (const key in data) formData.append(key, data[key]);
-            if (WEB_APP_URL && !WEB_APP_URL.includes('PEGA_AQUÍ')) {
-                navigator.sendBeacon(WEB_APP_URL, formData);
-            }
-            localStorage.removeItem(LOCAL_STORAGE_KEY);
+
+    document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'hidden') {
+            sendAbandonedData();
         }
     });
+
+    window.addEventListener('pagehide', sendAbandonedData);
 }
 
 export function initDynamicFields() {
     if (!DOM.leadForm) return;
 
-    // Listener para formateo de RUT y actualización de sliders
     DOM.leadForm.addEventListener('input', (e) => {
         const target = e.target;
         if (target.id === 'rut') target.value = formatRut(target.value);
@@ -279,19 +300,12 @@ export function initDynamicFields() {
         if (target.id === 'peso' && DOM.pesoOutput) DOM.pesoOutput.textContent = `${target.value} Kg`;
     });
 
-    // Listener para lógica condicional y otros cambios
     DOM.leadForm.addEventListener('change', e => {
         const target = e.target;
         
-        // =======================================================
-        // ===== INICIO DE LA CORRECCIÓN: Conectar el input de archivo
-        // =======================================================
         if (target.id === 'pdf_file') {
             handleFileUpload(target);
         }
-        // =======================================================
-        // ===== FIN DE LA CORRECCIÓN
-        // =======================================================
 
         if (target.id === 'sistema_actual') {
             const isapreDetails = document.getElementById('isapre-details');

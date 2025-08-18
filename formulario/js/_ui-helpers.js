@@ -32,26 +32,51 @@ export function openModal(modalId) {
     }
 }
 
-// --- FUNCIÓN closeModal (SIMPLIFICADA) ---
+// planespro/formulario/js/_ui-helpers.js
+
 export function closeModal(modalId) {
     const modal = document.getElementById(modalId);
     if (modal) {
         modal.classList.remove('is-visible');
 
-        // Solo quita el no-scroll si no queda ningún otro modal abierto.
         if (document.querySelectorAll('.modal.is-visible').length === 0) {
             document.body.classList.remove('no-scroll');
         }
 
-        // Resetea el formulario si es el que se está cerrando.
+        // Resetea el formulario y su estado visual por completo
         if (modalId === 'formModal') {
+            // Limpieza de datos y campos
             if (DOM.leadForm) DOM.leadForm.reset();
             if (localStorage.getItem('formProgress')) localStorage.removeItem('formProgress');
             
-            // Regresa al primer paso para la próxima vez que se abra.
+            // --- INICIO DE LAS CORRECCIONES ---
+
+            // CORRECCIÓN 1: Reiniciar el modal de bienvenida
+            const consentCheckbox = document.getElementById('consent-checkbox');
+            const continueBtn = document.getElementById('continue-btn');
+            if (consentCheckbox) consentCheckbox.checked = false;
+            if (continueBtn) continueBtn.disabled = true;
+
+            // CORRECCIÓN 2 y 3: Ocultar campos condicionales de Isapre y AFP
+            const isapreDetails = document.getElementById('isapre-details');
+            const afpDetails = document.getElementById('afp-details');
+            if (isapreDetails) isapreDetails.classList.remove('is-visible');
+            if (afpDetails) afpDetails.classList.remove('is-visible');
+
+            // Limpia la vista previa del archivo adjunto
+            const filePreview = document.getElementById('file-preview');
+            const fileLabel = document.querySelector('.file-upload-label');
+            if (filePreview && fileLabel) {
+                filePreview.innerHTML = '';
+                filePreview.classList.add('hidden');
+                fileLabel.classList.remove('hidden');
+            }
+
+            // --- FIN DE LAS CORRECCIONES ---
+
+            // Reseteo visual del formulario a su estado inicial
             setFormStepNum(0);
             updateFormView();
-
             document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
             document.querySelectorAll('.error-message.visible').forEach(el => el.classList.remove('visible'));
             

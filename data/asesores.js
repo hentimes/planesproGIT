@@ -26,10 +26,10 @@ export const asesoresData = [
     }
   },
   {
-    id: 'maria-paz',
-    nombre: 'María Paz Rodriguez',
+    id: 'betzabet-pereira',
+    nombre: 'Betzabeth Pereira',
     cargo: 'Especialista en Planes Individuales',
-    foto: 'assets/avatares/asesores/maria-paz.jpg',
+    foto: 'assets/avatares/asesores/betzabeth-pereira.jpg',
     certificacion: true,
     premium: true, // <-- Atributo premium añadido
     biografia: 'Me especializo en guiar a profesionales jóvenes y futuros padres a través del complejo mundo de las Isapres. Mi objetivo es que tomes decisiones informadas que te den tranquilidad hoy y en el futuro.',
@@ -49,7 +49,7 @@ export const asesoresData = [
       tiktok: '#'
     }
   },
-  {
+  /*{
     id: 'sofia-marquez',
     nombre: 'Sofía Márquez',
     cargo: 'Especialista en Planificación Previsional',
@@ -95,5 +95,5 @@ export const asesoresData = [
       tiktok: '#',
       linkedin: '#'
     }
-  }
+  }*/
 ];
