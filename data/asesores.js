@@ -5,8 +5,9 @@ export const asesoresData = [
     id: 'henry-farias',
     nombre: 'Henry Farías',
     cargo: 'Asesor Senior de Salud y Previsión',
-    foto: 'assets/avatares/asesores/henry-farias.jpg', // Ruta corregida
-    certificacion: true, 
+    foto: 'assets/avatares/asesores/henry-farias.jpg',
+    certificacion: true,
+    premium: true, // <-- Atributo premium añadido
     biografia: 'Con más de 10 años de experiencia en el sector, mi misión es encontrar el equilibrio perfecto entre cobertura y costo para mis clientes. Creo en la asesoría honesta: si Fonasa es tu mejor opción, seré el primero en decírtelo.',
     especialidades: [
       'Optimización de planes para familias',
@@ -17,14 +18,20 @@ export const asesoresData = [
     testimonio: {
       cita: 'Gracias a Henry optimicé mi plan y ahora pago mucho menos. Su honestidad es única.',
       autor: 'Patricio González'
+    },
+    socials: { // <-- Redes sociales añadidas
+      linkedin: '#',
+      x: '#',
+      instagram: '' // Vacío significa que no se mostrará
     }
   },
   {
     id: 'maria-paz',
     nombre: 'María Paz Rodriguez',
     cargo: 'Especialista en Planes Individuales',
-    foto: 'assets/avatares/asesores/maria-paz.jpg', // Ruta corregida
+    foto: 'assets/avatares/asesores/maria-paz.jpg',
     certificacion: true,
+    premium: true, // <-- Atributo premium añadido
     biografia: 'Me especializo en guiar a profesionales jóvenes y futuros padres a través del complejo mundo de las Isapres. Mi objetivo es que tomes decisiones informadas que te den tranquilidad hoy y en el futuro.',
     especialidades: [
       'Planes con cobertura de maternidad',
@@ -35,7 +42,58 @@ export const asesoresData = [
     testimonio: {
       cita: 'Nos ayudó a entender las diferencias y elegimos un plan perfecto para nuestra familia.',
       autor: 'Sofía Pérez'
+    },
+    socials: { // <-- Redes sociales añadidas
+      linkedin: '#',
+      instagram: '#',
+      tiktok: '#'
+    }
+  },
+  {
+    id: 'sofia-marquez',
+    nombre: 'Sofía Márquez',
+    cargo: 'Especialista en Planificación Previsional',
+    foto: 'assets/avatares/asesores/sofia-marquez.jpg',
+    certificacion: true,
+    premium: true, // <-- Atributo premium añadido
+    biografia: 'Con una sólida trayectoria en el sistema de pensiones, mi misión es guiar a mis clientes para que tomen el control de su futuro financiero, optimizando sus fondos de AFP y asegurando una jubilación tranquila.',
+    especialidades: [
+      'Optimización de multifondos',
+      'Planificación de jubilación',
+      'Análisis de Ahorro Previsional Voluntario (APV)',
+      'Asesoría en trámites de pensión'
+    ],
+    testimonio: {
+      cita: 'Sofía me ayudó a entender por primera vez mi AFP. Su asesoría fue clave para mi tranquilidad a futuro.',
+      autor: 'Javier Torres'
+    },
+    socials: { // <-- Redes sociales añadidas
+      linkedin: '#',
+      x: '#'
+    }
+  },
+  { // <-- NUEVO ASESOR AÑADIDO
+    id: 'daniela-rojas',
+    nombre: 'Daniela Rojas',
+    cargo: 'Especialista en Salud Joven y Deportistas',
+    foto: 'assets/avatares/asesores/daniela-rojas.webp', // <-- IMPORTANTE: Necesitarás añadir una imagen con este nombre.
+    certificacion: true,
+    premium: true,
+    biografia: 'Mi enfoque es ayudar a jóvenes y deportistas a maximizar su cobertura en Isapre, aprovechando su bajo factor de riesgo para obtener los mejores beneficios en kinesiología, terapias y consultas preventivas.',
+    especialidades: [
+      'Planes para primera afiliación',
+      'Cobertura optimizada para deportistas',
+      'Maximización de excedentes',
+      'Planes con cobertura en psicología y nutrición'
+    ],
+    testimonio: {
+      cita: 'Daniela encontró un plan que cubre todas mis terapias deportivas por un precio que no creía posible.',
+      autor: 'Martín Cáceres'
+    },
+    socials: {
+      instagram: '#',
+      tiktok: '#',
+      linkedin: '#'
     }
   }
-  // Para añadir un nuevo asesor, copia y pega una "ficha" como las de arriba aquí.
 ];
