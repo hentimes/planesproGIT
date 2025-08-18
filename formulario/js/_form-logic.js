@@ -281,13 +281,11 @@ export function initFormEventListeners() {
         });
     }
 
-    document.addEventListener('visibilitychange', () => {
-        if (document.visibilityState === 'hidden') {
-            sendAbandonedData();
-        }
-    });
-
+    // === INICIO DE LA MODIFICACIÓN ===
+    // Se elimina el listener de 'visibilitychange' que enviaba los datos al minimizar.
+    // Se mantiene 'pagehide', que es un método más fiable para detectar el cierre de la pestaña.
     window.addEventListener('pagehide', sendAbandonedData);
+    // === FIN DE LA MODIFICACIÓN ===
 }
 
 export function initDynamicFields() {
