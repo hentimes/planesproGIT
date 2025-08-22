@@ -230,6 +230,9 @@
     box-shadow: var(--shadow-lg);
     z-index: 998;
     animation: whatsapp-pulse 2.5s infinite ease-in-out;
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
 }
 .floating-whatsapp:hover {
     animation-play-state: paused;
