@@ -89,9 +89,7 @@
 .asesor-card__info {
     position: relative;
 }
-.asesor-card__certificacion {
-    position: static;
-}
+
 .asesor-card__certificacion .tooltip-text {
     visibility: hidden; opacity: 0;
     width: 240px; background-color: var(--color-text-dark);
@@ -107,6 +105,72 @@
 .asesor-card__certificacion:hover .tooltip-text {
     visibility: visible; opacity: 1;
 }
+
+/* --- Media Query para Tablets (768px a 991px) --- */
+@media (min-width: 768px) and (max-width: 991px) {
+    .hero-asesores__header {
+        grid-template-columns: 150px 1fr;
+        justify-items: start;
+        gap: var(--spacing-lg);
+        text-align: left;
+    }
+    .hero-asesores__img {
+        width: 150px;
+    }
+    .hero-asesores__header h1 {
+        font-size: 2.2rem;
+    }
+    .hero-guarantees-mobile {
+        display: none;
+    }
+    .hero-guarantees-desktop {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--spacing-sm);
+        width: 100%;
+        margin-top: 0;
+    }
+    .guarantee-card {
+        background-color: var(--color-background);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-md);
+        padding: var(--spacing-md);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: var(--spacing-sm);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        text-align: center;
+    }
+    .guarantee-card .fas {
+        font-size: 1.8rem;
+        color: var(--color-primary);
+        flex-shrink: 0;
+    }
+    .guarantee-card__content h4 {
+        font-size: 1rem;
+        margin: 0 0 4px 0;
+    }
+    .guarantee-card__content p {
+        font-size: 0.85rem;
+        margin: 0;
+        line-height: 1.4;
+        color: var(--color-text-light);
+    }
+    .asesores-slider-controls {
+        display: flex;
+    }
+    .asesores-slider-wrapper .slider-arrow {
+        display: none;
+    }
+    .asesor-card__header, .asesor-card__info {
+        display: flex !important;
+    }
+    .asesor-card__header-mobile, .asesor-card__body-mobile, .asesor-card__accordion {
+        display: none !important;
+    }
+}
+
 
 /* --- Media Query para Escritorio (992px y más) --- */
 @media (min-width: 992px) {
@@ -204,7 +268,7 @@
     transform: rotate(180deg);
 }
 
-/* --- 7.2 -> Slider de Asesores --- */
+/* --- 7.2 -> Slider de Asesores (Desktop) --- */
 .asesores-slider-wrapper {
     position: relative;
     width: 100%;
@@ -242,6 +306,16 @@
     transform: translateY(-8px);
     box-shadow: var(--shadow-lg);
 }
+.asesor-card__header-mobile {
+    display: none;
+}
+.asesor-card__body-mobile {
+    display: none;
+}
+.asesor-card__accordion {
+    display: none;
+}
+
 .asesor-card__header {
     background-color: var(--color-primary);
     height: 100px;
@@ -266,16 +340,14 @@
     border: 5px solid var(--color-white);
 }
 .asesor-card__info {
-    padding: var(--spacing-md) var(--spacing-lg) var(--spacing-lg);
-    padding-top: 70px;
+    padding: 70px var(--spacing-lg) var(--spacing-lg);
     display: flex;
     flex-direction: column;
     flex-grow: 1;
 }
 .asesor-card__nombre {
     font-size: 1.3rem;
-    margin: 0;
-    margin-top: var(--spacing-sm);
+    margin: var(--spacing-sm) 0 0 0;
 }
 .asesor-card__cargo {
     font-size: .85rem;
@@ -302,8 +374,7 @@
     font-size: 1.1rem;
 }
 .asesor-card__especialidades {
-    margin-top: var(--spacing-md);
-    margin-bottom: var(--spacing-md);
+    margin: var(--spacing-md) 0;
     text-align: left;
 }
 .asesor-card__especialidades ul {
@@ -328,12 +399,12 @@
     width: 100%;
 }
 .asesores-slider-controls {
-    display: flex;
+    display: none;
     justify-content: center;
     align-items: center;
     gap: 12px;
     margin-top: var(--spacing-lg);
-    margin-bottom: var(--spacing-xxl);
+    margin-bottom: var(--spacing-lg);
 }
 .asesores-slider-controls .slider-dot {
     width: 12px;
@@ -351,6 +422,7 @@
 .asesores-slider-wrapper .slider-arrow {
     display: none;
 }
+
 @media (min-width: 992px) {
     .asesores-slider-wrapper .slider-arrow {
         display: inline-flex;
@@ -431,7 +503,9 @@
 .asesor-modal__info { display: flex; flex-direction: column; }
 .asesor-modal__footer {
     padding: 0 var(--spacing-xl) var(--spacing-xl) var(--spacing-xl);
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 .asesor-modal__nombre { margin-bottom: 4px; }
 .asesor-modal__cargo {
@@ -511,7 +585,7 @@
 .servicio-item {
     background-color: transparent;
     padding: 0; border: none; box-shadow: none;
-    height: 220px;
+    min-height: 220px;
 }
 .servicio-item .flip-card__front,
 .servicio-item .flip-card__back {
@@ -528,14 +602,207 @@
 }
 .servicio-item .flip-card__back { padding: 25px; }
 .servicio-item .flip-card__back p { font-size: .9rem; line-height: 1.4; }
+
 @media (max-width: 768px) {
-    .servicios__grid { grid-template-columns: 1fr 1fr; }
-    .servicio-item { height: 180px; }
+    .servicios__grid {
+        grid-template-columns: 1fr 1fr;
+        justify-content: center;
+        gap: var(--spacing-sm);
+    }
+    .servicio-item { 
+        min-height: 180px;
+        height: auto;
+    }
     .servicio-item .flip-card__front h3 { font-size: 1rem; }
+    .servicio-item .flip-card__back { padding: 15px; }
+    .servicio-item .flip-card__back p { font-size: 0.85rem; }
 }
 
 /* --- 7.5 -> Media Queries Adicionales --- */
 @media (max-width: 480px) {
     .asesor-card { flex: 0 0 280px; }
     .accordion-item__header h4 { font-size: 1rem; }
+}
+
+/* --- 7.6 -> Estilos para la vista de Asesores en Móvil --- */
+@media (max-width: 767px) {
+    .asesores-slider-wrapper .slider-arrow,
+    .asesores-slider-controls,
+    .asesor-card__info, 
+    .asesor-card__header {
+        display: none;
+    }
+
+    #asesores-container.mobile-view {
+        display: flex;
+        flex-direction: column;
+        overflow-x: visible;
+        scroll-snap-type: none;
+        padding: var(--spacing-lg) 0;
+        gap: var(--spacing-md);
+    }
+
+    .asesor-card {
+        flex: 1 1 auto;
+        flex-direction: column;
+        text-align: left;
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        margin: 0 var(--spacing-md);
+    }
+    
+    .asesor-card:hover {
+        transform: none;
+        box-shadow: var(--shadow-sm);
+    }
+    
+    .asesor-card__premium-ribbon {
+        display: none;
+    }
+
+    .asesor-card__header-mobile {
+        display: flex;
+        align-items: flex-start;
+        gap: var(--spacing-md);
+        background-color: var(--color-primary);
+        padding: var(--spacing-md);
+        position: relative;
+    }
+    
+    .asesor-card__img-container {
+        position: static;
+        transform: none;
+        width: 60px;
+        height: 60px;
+        border-radius: var(--radius-md);
+        box-shadow: none;
+        flex-shrink: 0;
+    }
+
+    .asesor-card__img {
+        border-radius: var(--radius-md);
+        border: 3px solid var(--color-white);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .asesor-card__title-group {
+        position: relative;
+        padding-top: 5px;
+    }
+
+    .asesor-card__nombre {
+        font-size: 1.2rem;
+        margin: 0;
+        color: var(--color-white);
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+    }
+
+    .asesor-card__cargo {
+        font-size: .85rem;
+        margin: 4px 0 0 0;
+        color: var(--color-white);
+        opacity: 0.8;
+        font-weight: 400;
+        display: block;
+    }
+
+    .asesor-card__certificacion {
+        position: relative;
+        display: inline-flex;
+        color: var(--color-white);
+        opacity: 0.8;
+    }
+    
+    .asesor-card__certificacion .tooltip-text {
+        position: fixed;
+        top: auto;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 0.8rem;
+        width: 90%;
+        max-width: 250px;
+        margin-top: 10px;
+    }
+
+    .asesor-card__certificacion:hover .tooltip-text {
+        visibility: visible;
+        opacity: 1;
+    }
+
+    .asesor-card__body-mobile {
+        display: block;
+        padding: var(--spacing-md);
+        background-color: var(--color-white);
+    }
+    
+    .asesor-card__fortaleza {
+        font-size: 0.9rem;
+        font-style: italic;
+        color: var(--color-text-light);
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .asesor-card__fortaleza .fas {
+        color: var(--color-primary);
+    }
+    
+    .asesor-card__accordion {
+        display: block;
+        border-top: 1px solid var(--color-border);
+        background-color: var(--color-white);
+    }
+
+    .asesor-card__accordion-toggle {
+        width: 100%;
+        background: none;
+        border: none;
+        padding: var(--spacing-sm) var(--spacing-md);
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--color-primary);
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .asesor-card__accordion-toggle .fas {
+        transition: transform 0.3s ease;
+    }
+    
+    .asesor-card.is-open .asesor-card__accordion-toggle .fas {
+        transform: rotate(180deg);
+    }
+
+    .asesor-card__accordion-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.4s ease-out, padding 0.4s ease-out;
+        padding: 0 var(--spacing-md);
+    }
+
+    .asesor-card.is-open .asesor-card__accordion-content {
+        max-height: 300px;
+        padding-bottom: var(--spacing-md);
+    }
+
+    .asesor-card__especialidades {
+        margin: 0 0 var(--spacing-md) 0;
+    }
+    
+    .asesor-card__especialidades ul {
+        gap: 6px;
+        font-size: 0.85rem;
+    }
+
+    .asesor-card__cta {
+        width: 100%;
+        padding: 10px;
+        font-size: 0.9rem;
+    }
 }

@@ -2,34 +2,14 @@
 
 export const asesoresData = [
   {
-    id: 'henry-farias',
-    nombre: 'Henry Farías',
-    cargo: 'Asesor Senior de Salud y Previsión',
-    foto: 'assets/avatares/asesores/henry-farias.jpg',
-    certificacion: true,
-    premium: true, // <-- Atributo premium añadido
-    biografia: 'Con más de 10 años de experiencia en el sector, mi misión es encontrar el equilibrio perfecto entre cobertura y costo para mis clientes. Creo en la asesoría honesta: si Fonasa es tu mejor opción, seré el primero en decírtelo.',
-    especialidades: [
-      'Optimización de planes para familias',
-      'Análisis de cobertura hospitalaria',
-      'Asesoría para trabajadores independientes',
-      'Evaluación de cambio de AFP'
-    ],
-    testimonio: {
-      cita: 'Gracias a Henry optimicé mi plan y ahora pago mucho menos. Su honestidad es única.',
-      autor: 'Patricio González'
-    },
-    socials: { // <-- Redes sociales añadidas
-      linkedin: '#',
-      x: '#',
-      instagram: '' // Vacío significa que no se mostrará
-    }
-  },
-  {
     id: 'betzabet-pereira',
     nombre: 'Betzabeth Pereira',
     cargo: 'Especialista en Planes Individuales',
     foto: 'assets/avatares/asesores/betzabeth-pereira.jpg',
+    fortaleza: { 
+        icon: 'fa-heart-pulse', 
+        text: 'Experta en mejorar coberturas de salud.' 
+    },
     certificacion: true,
     premium: true, // <-- Atributo premium añadido
     biografia: 'Me especializo en guiar a profesionales jóvenes y futuros padres a través del complejo mundo de las Isapres. Mi objetivo es que tomes decisiones informadas que te den tranquilidad hoy y en el futuro.',
@@ -46,9 +26,41 @@ export const asesoresData = [
     socials: { // <-- Redes sociales añadidas
       linkedin: '#',
       instagram: '#',
-      tiktok: '#'
+      tiktok: '', // Vacío significa que no se mostrará
+      facebook: '#'
     }
   },
+  {
+    id: 'henry-farias',
+    nombre: 'Henry Farías',
+    cargo: 'Asesor Senior de Salud y Previsión',
+    foto: 'assets/avatares/asesores/henry-farias.jpg',
+    fortaleza: { 
+      icon: 'fa-hand-holding-usd', 
+      text: 'Especialista en optimizar tu 7% al máximo.',
+    },
+    certificacion: true,
+    premium: true, // <-- Atributo premium añadido
+    biografia: 'Con más de 10 años de experiencia en el sector, mi misión es encontrar el equilibrio perfecto entre cobertura y costo para mis clientes. Creo en la asesoría honesta: si Fonasa es tu mejor opción, seré el primero en decírtelo.',
+    especialidades: [
+      'Optimización de planes para familias',
+      'Análisis de cobertura hospitalaria',
+      'Asesoría para trabajadores independientes',
+      'Asesoría previsional de AFP'
+    ],
+    testimonio: {
+      cita: 'Gracias a Henry optimicé mi plan y ahora pago mucho menos. Su honestidad es única.',
+      autor: 'Patricio González'
+    },
+    socials: { // <-- Redes sociales añadidas
+      linkedin: '#',
+      x: '#',
+      instagram: '', // Vacío significa que no se mostrará
+      facebook: '#',  
+      twitter: '#' // Vacío significa que no se mostrará  
+    }
+  },
+
   /*{
     id: 'sofia-marquez',
     nombre: 'Sofía Márquez',

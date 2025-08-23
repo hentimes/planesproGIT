@@ -121,7 +121,7 @@ function hideAsesorModal(modalContainer) {
  * Crea el código HTML para una sola tarjeta de perfil de asesor en la página.
  */
 function createAsesorCard(asesor) {
-    const especialidadesHtml = asesor.especialidades.slice(0, 3).map(item => `
+    const especialidadesHtml = asesor.especialidades.map(item => `
         <li><i class="fas fa-check-circle"></i> ${item}</li>
     `).join('');
 
@@ -137,95 +137,137 @@ function createAsesorCard(asesor) {
                <i class="fas fa-star"></i>
            </div>`
         : '';
+    
+    // NOTA: Debes agregar la propiedad 'fortaleza' a cada objeto en tu archivo 'data/asesores.js'.
+    // Ejemplo: fortaleza: { icon: 'fa-baby', text: 'Te ayudo a optimizar tu plan de maternidad' }
+    const fortalezaHtml = asesor.fortaleza ? `
+        <p class="asesor-card__fortaleza">
+            <i class="fas ${asesor.fortaleza.icon}"></i>
+            <span>${asesor.fortaleza.text}</span>
+        </p>
+    ` : '';
 
     return `
-        <div class="asesor-card">
+        <div class="asesor-card" data-asesor-id="${asesor.id}">
             ${premiumRibbonHtml}
-            <div class="asesor-card__header">
+            
+            <div class="asesor-card__header-mobile">
                 <div class="asesor-card__img-container">
                     <img src="${asesor.foto}" alt="Foto de ${asesor.nombre}" class="asesor-card__img">
                 </div>
-            </div>
-            <div class="asesor-card__info">
-                <h3 class="asesor-card__nombre">${asesor.nombre}</h3>
-                <p class="asesor-card__cargo">${asesor.cargo} ${certificacionHtml}</p>
-                
-                <div class="asesor-card__especialidades">
-                    <ul>${especialidadesHtml}</ul>
+                <div class="asesor-card__title-group">
+                    <h3 class="asesor-card__nombre">${asesor.nombre} ${certificacionHtml}</h3>
+                    <p class="asesor-card__cargo">${asesor.cargo}</p>
                 </div>
+            </div>
 
-                <button class="button button--primary asesor-card__cta" data-asesor-id="${asesor.id}">
-                    <i class="fas fa-user-tie"></i> Ver Perfil Completo
+            <div class="asesor-card__body-mobile">
+                ${fortalezaHtml}
+            </div>
+            
+            <div class="asesor-card__accordion">
+                <button class="asesor-card__accordion-toggle">
+                    Ver Especialidades <i class="fas fa-chevron-down"></i>
                 </button>
+                <div class="asesor-card__accordion-content">
+                    <div class="asesor-card__especialidades">
+                        <ul>${especialidadesHtml}</ul>
+                    </div>
+                    <button class="button button--primary asesor-card__cta">
+                        <i class="fas fa-user-tie"></i> Ver Perfil Completo
+                    </button>
+                </div>
             </div>
         </div>
     `;
 }
 
+
 /**
- * Inicializa la carga de los perfiles de asesores y la lógica del carrusel.
+ * Inicializa la carga de los perfiles de asesores y la lógica del carrusel/acordeón.
  */
 export function initAsesores() {
     const sliderWrapper = document.querySelector('.asesores-slider-wrapper');
     if (!sliderWrapper) return;
     
     const container = sliderWrapper.querySelector('#asesores-container');
-    const prevButton = sliderWrapper.querySelector('.slider-arrow.prev');
-    const nextButton = sliderWrapper.querySelector('.slider-arrow.next');
-    const dotsContainer = document.querySelector('.asesores-slider-controls .slider-dots');
-
-    if (!container || !prevButton || !nextButton || !dotsContainer) return;
+    if (!container) return;
 
     container.innerHTML = asesoresData.map(createAsesorCard).join('');
-    dotsContainer.innerHTML = asesoresData.map((_, index) => `<button class="slider-dot" data-index="${index}"></button>`).join('');
 
-    const cards = container.querySelectorAll('.asesor-card');
-    const dots = dotsContainer.querySelectorAll('.slider-dot');
-    if (cards.length === 0) return;
-
-    const scrollAmount = cards[0].offsetWidth + parseInt(window.getComputedStyle(container).gap, 10);
-    
-    const updateSliderUI = () => {
-        const currentIndex = Math.round(container.scrollLeft / scrollAmount);
-        dots.forEach((dot, index) => {
-            dot.classList.toggle('is-active', index === currentIndex);
-        });
-        prevButton.disabled = currentIndex === 0;
-        nextButton.disabled = currentIndex >= cards.length - 1;
-    };
-
-    nextButton.addEventListener('click', () => {
-        container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-    });
-
-    prevButton.addEventListener('click', () => {
-        container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
-    });
-    
-    dots.forEach(dot => {
-        dot.addEventListener('click', (e) => {
-            const index = parseInt(e.target.dataset.index, 10);
-            container.scrollTo({
-                left: index * scrollAmount,
-                behavior: 'smooth'
-            });
-        });
-    });
-
-    let scrollTimeout;
-    container.addEventListener('scroll', () => {
-        clearTimeout(scrollTimeout);
-        scrollTimeout = setTimeout(updateSliderUI, 150);
-    });
-
-    // Event listener para abrir el modal
     container.addEventListener('click', (event) => {
-        const ctaButton = event.target.closest('.asesor-card__cta');
-        if (ctaButton) {
-            const asesorId = ctaButton.dataset.asesorId;
+        const card = event.target.closest('.asesor-card');
+        if (!card) return;
+
+        const asesorId = card.dataset.asesorId;
+
+        if (event.target.closest('.asesor-card__accordion-toggle')) {
+            card.classList.toggle('is-open');
+        }
+
+        if (event.target.closest('.asesor-card__cta')) {
             showAsesorModal(asesorId);
         }
     });
+
+    const setupDesktopCarousel = () => {
+        const prevButton = sliderWrapper.querySelector('.slider-arrow.prev');
+        const nextButton = sliderWrapper.querySelector('.slider-arrow.next');
+        const dotsContainer = document.querySelector('.asesores-slider-controls .slider-dots');
+
+        if (!prevButton || !nextButton || !dotsContainer) return;
+
+        dotsContainer.innerHTML = asesoresData.map((_, index) => `<button class="slider-dot" data-index="${index}"></button>`).join('');
+        
+        const cards = container.querySelectorAll('.asesor-card');
+        const dots = dotsContainer.querySelectorAll('.slider-dot');
+        if (cards.length === 0) return;
+
+        const scrollAmount = cards[0].offsetWidth + parseInt(window.getComputedStyle(container).gap, 10);
+        
+        const updateSliderUI = () => {
+            const currentIndex = Math.round(container.scrollLeft / scrollAmount);
+            dots.forEach((dot, index) => dot.classList.toggle('is-active', index === currentIndex));
+            prevButton.disabled = currentIndex === 0;
+            nextButton.disabled = currentIndex >= cards.length - 1;
+        };
+
+        nextButton.addEventListener('click', () => {
+            container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+        });
+
+        prevButton.addEventListener('click', () => {
+            container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+        });
+        
+        dots.forEach(dot => {
+            dot.addEventListener('click', (e) => {
+                const index = parseInt(e.target.dataset.index, 10);
+                container.scrollTo({ left: index * scrollAmount, behavior: 'smooth' });
+            });
+        });
+
+        let scrollTimeout;
+        container.addEventListener('scroll', () => {
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(updateSliderUI, 150);
+        });
+
+        updateSliderUI();
+    };
+
+    const handleView = () => {
+        if (window.innerWidth >= 768) {
+            container.classList.remove('mobile-view');
+            if (!container.dataset.desktopInit) {
+                setupDesktopCarousel();
+                container.dataset.desktopInit = 'true';
+            }
+        } else {
+            container.classList.add('mobile-view');
+        }
+    };
     
-    updateSliderUI(); // Llamada inicial
+    window.addEventListener('resize', handleView);
+    handleView();
 }
