@@ -16,10 +16,8 @@ import { initCasosDeExitoSlider } from './modules/casosDeExito-slider.js'; // In
 import { initTestimonials } from './modules/testimonials.js';       // Gestiona la rotación de testimonios.
 import { initLogoFader } from './modules/logo-fader.js';          // Anima los logos de las Isapres.
 import { initPlanesSlider } from './modules/planes-slider.js';    // Inicializa el carrusel de planes de salud.
-import { initAsesores } from './modules/asesores-loader.js';       // Carga y gestiona el carrusel de asesores.
+import { initAsesores, initNosotrosAsesores } from './modules/asesores-loader.js';   // Carga y gestiona el carrusel de asesores. 
 import { initAccordion } from './modules/accordion.js';     // Inicializa el acordeón de beneficios.
-
-// --- Módulos del Formulario ---
 import { loadModules } from '../formulario/js/_module-loader.js'; // Carga el HTML de los modales del formulario.
 import { setElements } from '../formulario/js/_dom-elements.js';    // Asigna las referencias a los elementos del DOM.
 import {
@@ -64,8 +62,9 @@ document.addEventListener('DOMContentLoaded', () => {
     initCasosDeExitoSlider();
     initTestimonials();
     initLogoFader();
-    initAsesores();
     initAccordion();
+    initAsesores();
+    initNosotrosAsesores(); 
     console.log("🚀 Componentes de la página principal inicializados.");
 
     // 2. Carga el HTML del formulario desde los archivos de plantilla.

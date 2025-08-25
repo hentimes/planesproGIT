@@ -4,8 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Noticias - PlanesPro.cl</title>
-    <link rel="icon" href="assets/logos_pp/favicon.ico" type="image/x-icon">
-
     <link rel="stylesheet" href="css/styles.css?v=1.2" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -22,8 +20,10 @@
             </a>
             <nav class="header__nav">
                 <a href="index.html" class="header__nav-link">Inicio</a>
+                <a href="nosotros.html" class="header__nav-link">Nosotros</a>
                 <a href="noticias.html" class="header__nav-link header__nav-link--active">Noticias</a>
                 <a href="asesores.html" class="header__nav-link">Nuestros Asesores</a>
+                <a href="#" class="header__nav-link" data-modal-trigger="formModal">Simular Plan</a>
             </nav>
             <div class="header__actions">
                 <button class="button button--primary header__cta" data-modal-trigger="formModal" id="cta_superior">Analizar Mi Plan</button>
@@ -38,8 +38,10 @@
 
     <div class="nav-mobile" id="nav-mobile">
         <a href="index.html" class="nav-mobile__link">Inicio</a>
+        <a href="nosotros.html" class="nav-mobile__link">Nosotros</a>
         <a href="noticias.html" class="nav-mobile__link nav-mobile__link--active">Noticias</a>
         <a href="asesores.html" class="nav-mobile__link">Nuestros Asesores</a>
+        <a href="#" class="nav-mobile__link" data-modal-trigger="formModal">Simular Plan</a>
         <button class="button button--primary nav-mobile__cta" data-modal-trigger="formModal" id="cta_mobile_menu_noticias">Analizar Mi Plan</button>
     </div>
 
@@ -56,8 +58,9 @@
     <footer class="footer">
         <div class="container footer__container">
             <div class="footer__left-column">
-                <a href="index.html" class="footer__brand">
+                <a href="index.html" class="header__brand footer__brand">
                     <img src="assets/logos_pp/logo-planespro.cla.png" alt="PlanesPro.cl Logo Oscuro" class="footer__logo-img" />
+                    <span class="header__brand-name">PlanesPro.cl</span>
                 </a>
                 <div class="footer__contact">
                     <p><i class="fab fa-whatsapp"></i> +56 9 1234 5678</p>

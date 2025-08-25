@@ -32,10 +32,21 @@
 }
 .header__brand-name {
   font-size: 1.2rem;
-  display: none;
 }
+
+/* Regla para ocultar el nombre solo en el header en vista de escritorio */
+.header .header__brand-name {
+    display: none;
+}
+
+/* Regla para mostrar SIEMPRE el nombre en el footer */
+.footer .header__brand-name {
+    display: inline;
+    color: var(--color-white);
+}
+
 .header__nav {
-  display: flex;
+  display: flex; 
   gap: var(--spacing-lg);
 }
 .header__nav-link {
@@ -98,7 +109,7 @@
   z-index: 999;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 4px;
   opacity: 0;
   visibility: hidden;
   transform: translateY(-20px) scale(0.95);
@@ -113,11 +124,11 @@
 .nav-mobile__link {
     font-size: 1rem;
     color: var(--color-text);
-    padding: 12px;
+    padding: 4px 12px;
     border-radius: 6px;
 }
 .nav-mobile__cta {
-    margin-top: 8px;
+    margin-top: 4px;
 }
 
 /* --- Footer (Pie de Página) --- */

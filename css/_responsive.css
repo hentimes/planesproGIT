@@ -12,7 +12,7 @@
   .header__nav,
   .header__cta { display: none; }
   .header__nav-toggle { display: block; }
-  .header__brand-name { display: block; }
+  .header .header__brand-name { display: block; }
 }
 
 @media (max-width: 768px) {

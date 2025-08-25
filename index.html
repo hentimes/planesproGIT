@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>PlanesPro.cl - Asesoría Experta en Planes de Salud</title>
     <meta name="description" content="Especialistas certificados te ayudan a optimizar tu plan de salud Isapre. Obtén la mejor cobertura y ahorra. Asesoría transparente y gratuita." />
-    <link rel="icon" href="assets/logos_pp/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="assets/logos_pp/logo-planespro.cla.png" type="image/png">
 
     <link rel="stylesheet" href="css/styles.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
@@ -23,11 +23,11 @@
             </a>
 
             <nav class="header__nav">
-                <a href="#proceso" class="header__nav-link">Proceso</a>
-                <a href="#planes" class="header__nav-link">Planes</a>
-                <a href="#casos-exito" class="header__nav-link">Casos de Éxito</a>
+                <a href="index.html" class="header__nav-link header__nav-link--active">Inicio</a>
+                <a href="nosotros.html" class="header__nav-link">Nosotros</a>
                 <a href="noticias.html" class="header__nav-link">Noticias</a>
                 <a href="asesores.html" class="header__nav-link">Nuestros Asesores</a>
+                <a href="#" class="header__nav-link" data-modal-trigger="formModal">Simular Plan</a>
             </nav>
             
             <div class="header__actions">
@@ -42,14 +42,13 @@
     </header>
   
     <div class="nav-mobile" id="nav-mobile">
-        <a href="#proceso" class="nav-mobile__link">Proceso</a>
-        <a href="#planes" class="nav-mobile__link">Planes</a>
-        <a href="#casos-exito" class="nav-mobile__link">Casos de Éxito</a>
+        <a href="index.html" class="nav-mobile__link nav-mobile__link--active">Inicio</a>
+        <a href="nosotros.html" class="nav-mobile__link">Nosotros</a>
         <a href="noticias.html" class="nav-mobile__link">Noticias</a>
         <a href="asesores.html" class="nav-mobile__link">Nuestros Asesores</a>
-        <button class="button button--primary nav-mobile__cta" data-modal-trigger="formModal" id="cta_mobile_menu">Analizar Mi Plan</button>
+        <a href="#" class="nav-mobile__link" data-modal-trigger="formModal">Simular Plan</a>
+        <button class="button button--primary nav-mobile__cta" data-modal-trigger="formModal" id="cta_mobile_menu_index">Analizar Mi Plan</button>
     </div>
-
     <main>
         <div id="inicio" class="screen">
             <section class="hero">
@@ -206,8 +205,9 @@
                 <div class="container footer__container">
                     
                     <div class="footer__left-column">
-                        <a href="index.html" class="footer__brand">
+                        <a href="index.html" class="header__brand footer__brand">
                             <img src="assets/logos_pp/logo-planespro.cla.png" alt="PlanesPro.cl Logo Oscuro" class="footer__logo-img" />
+                            <span class="header__brand-name">PlanesPro.cl</span>
                         </a>
                         <div class="footer__contact">
                             <p><i class="fab fa-whatsapp"></i> +56 9 1234 5678</p>

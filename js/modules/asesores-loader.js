@@ -138,8 +138,6 @@ function createAsesorCard(asesor) {
            </div>`
         : '';
     
-    // NOTA: Debes agregar la propiedad 'fortaleza' a cada objeto en tu archivo 'data/asesores.js'.
-    // Ejemplo: fortaleza: { icon: 'fa-baby', text: 'Te ayudo a optimizar tu plan de maternidad' }
     const fortalezaHtml = asesor.fortaleza ? `
         <p class="asesor-card__fortaleza">
             <i class="fas ${asesor.fortaleza.icon}"></i>
@@ -151,6 +149,21 @@ function createAsesorCard(asesor) {
         <div class="asesor-card" data-asesor-id="${asesor.id}">
             ${premiumRibbonHtml}
             
+            <div class="asesor-card__header">
+                <div class="asesor-card__img-container">
+                    <img src="${asesor.foto}" alt="Foto de ${asesor.nombre}" class="asesor-card__img">
+                </div>
+            </div>
+            <div class="asesor-card__info">
+                <h3 class="asesor-card__nombre">${asesor.nombre} ${certificacionHtml}</h3>
+                <p class="asesor-card__cargo">${asesor.cargo}</p>
+                <div class="asesor-card__especialidades">
+                    <ul>${especialidadesHtml}</ul>
+                </div>
+                <button class="button button--primary asesor-card__cta">
+                    <i class="fas fa-user-tie"></i> Ver Perfil Completo
+                </button>
+            </div>
             <div class="asesor-card__header-mobile">
                 <div class="asesor-card__img-container">
                     <img src="${asesor.foto}" alt="Foto de ${asesor.nombre}" class="asesor-card__img">
@@ -160,11 +173,9 @@ function createAsesorCard(asesor) {
                     <p class="asesor-card__cargo">${asesor.cargo}</p>
                 </div>
             </div>
-
             <div class="asesor-card__body-mobile">
                 ${fortalezaHtml}
             </div>
-            
             <div class="asesor-card__accordion">
                 <button class="asesor-card__accordion-toggle">
                     Ver Especialidades <i class="fas fa-chevron-down"></i>
@@ -195,20 +206,51 @@ export function initAsesores() {
 
     container.innerHTML = asesoresData.map(createAsesorCard).join('');
 
+    // --- INICIO DE LA MODIFICACIÓN: Lógica de Clic y Doble Clic ---
+    
+    let clickTimer = null;
+
     container.addEventListener('click', (event) => {
         const card = event.target.closest('.asesor-card');
         if (!card) return;
 
         const asesorId = card.dataset.asesorId;
 
+        // Acción para el botón "Ver Especialidades" (móvil)
         if (event.target.closest('.asesor-card__accordion-toggle')) {
             card.classList.toggle('is-open');
+            return; // Detiene la ejecución para no interferir con otras lógicas
         }
 
+        // Acción para el botón "Ver Perfil Completo"
         if (event.target.closest('.asesor-card__cta')) {
             showAsesorModal(asesorId);
+            return;
+        }
+
+        // Lógica de clic/doble clic en el nombre o la foto
+        const isClickableArea = event.target.closest('.asesor-card__nombre, .asesor-card__img-container');
+        if (isClickableArea) {
+            if (clickTimer === null) {
+                // PRIMER CLIC: Inicia un temporizador.
+                clickTimer = setTimeout(() => {
+                    clickTimer = null;
+                    // ACCIÓN DE UN SOLO CLIC: Abrir el acordeón
+                    if (window.innerWidth < 768) { // Solo en móvil
+                        card.classList.toggle('is-open');
+                    }
+                }, 250); // 250ms de espera para un segundo clic
+            } else {
+                // SEGUNDO CLIC: Cancela el temporizador y ejecuta la acción de doble clic.
+                clearTimeout(clickTimer);
+                clickTimer = null;
+                // ACCIÓN DE DOBLE CLIC: Abrir el modal del perfil
+                showAsesorModal(asesorId);
+            }
         }
     });
+    
+    // --- FIN DE LA MODIFICACIÓN ---
 
     const setupDesktopCarousel = () => {
         const prevButton = sliderWrapper.querySelector('.slider-arrow.prev');
@@ -270,4 +312,56 @@ export function initAsesores() {
     
     window.addEventListener('resize', handleView);
     handleView();
+}
+
+
+// --- ¡NUEVO! FUNCIÓN SIMPLE PARA LA PÁGINA /nosotros.html ---
+
+/**
+ * Crea el HTML para una tarjeta de asesor simplificada para la página "Nosotros".
+ */
+function createNosotrosAsesorCard(asesor) {
+    return `
+        <div class="asesor-card" data-asesor-id="${asesor.id}">
+            <div class="asesor-card__header">
+                <div class="asesor-card__img-container">
+                    <img src="${asesor.foto}" alt="Foto de ${asesor.nombre}" class="asesor-card__img">
+                </div>
+            </div>
+            <div class="asesor-card__info">
+                 <h3 class="asesor-card__nombre">${asesor.nombre}</h3>
+                 <p class="asesor-card__cargo">${asesor.cargo}</p>
+            </div>
+            <div class="asesor-card__header-mobile">
+                <div class="asesor-card__img-container">
+                    <img src="${asesor.foto}" alt="Foto de ${asesor.nombre}" class="asesor-card__img">
+                </div>
+                <div class="asesor-card__title-group">
+                    <h3 class="asesor-card__nombre">${asesor.nombre}</h3>
+                    <p class="asesor-card__cargo">${asesor.cargo}</p>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+/**
+ * Inicializa la carga de los perfiles de asesores destacados en la página "Nosotros".
+ */
+export function initNosotrosAsesores() {
+    const container = document.querySelector('.page-nosotros .equipo__grid');
+    if (!container) {
+        // Si no estamos en la página "Nosotros", no hace nada.
+        return;
+    }
+
+    const asesoresDestacados = asesoresData.slice(0, 2);
+    container.innerHTML = asesoresDestacados.map(createNosotrosAsesorCard).join('');
+
+    container.querySelectorAll('.asesor-card').forEach(card => {
+        card.addEventListener('click', () => {
+            window.location.href = 'asesores.html';
+        });
+        card.style.cursor = 'pointer';
+    });
 }

@@ -35,8 +35,8 @@ main {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding-top: var(--spacing-xxl);
-  padding-bottom: var(--spacing-xxl);
+  padding-top: var(--spacing-xl);
+  padding-bottom: var(--spacing-xl);
 }
 .screen--light-bg {
     background-color: var(--color-background);
@@ -182,7 +182,7 @@ main {
     padding-top: var(--header-height);
 }
 .page-noticias .page-section {
-    padding-top: 40px;
+    padding-top: 20px;
     text-align: center;
 }
 .page-noticias .section__title {
@@ -190,7 +190,7 @@ main {
     margin-bottom: 32px;
 }
 .page-noticias .placeholder-illustration {
-    max-width: 400px;  
+    max-width: 300px;  
     margin: 0 auto 24px auto;
 }
 .page-noticias .placeholder-content p {
